@@ -78,4 +78,12 @@ CMakeFiles/ptc.dir/src/main.c.o: \
  /usr/include/string.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
- /usr/include/strings.h
+ /usr/include/strings.h \
+ /home/tomasz/Documents/Studia/PTC/projekt/inc/tcp_connection.h \
+ /home/tomasz/Documents/Studia/PTC/projekt/inc/mqtt_client.h \
+ /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h /usr/include/stdint.h \
+ /usr/include/x86_64-linux-gnu/bits/wchar.h \
+ /home/tomasz/Documents/Studia/PTC/projekt/inc/publish.h \
+ /home/tomasz/Documents/Studia/PTC/projekt/inc/mqtt_utils.h \
+ /home/tomasz/Documents/Studia/PTC/projekt/inc/tcp_connection.h \
+ /home/tomasz/Documents/Studia/PTC/projekt/inc/mqtt_utils.h

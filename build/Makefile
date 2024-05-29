@@ -117,6 +117,45 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named tcp_connection
+
+# Build rule for target.
+tcp_connection: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tcp_connection
+.PHONY : tcp_connection
+
+# fast build rule for target.
+tcp_connection/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tcp_connection.dir/build.make CMakeFiles/tcp_connection.dir/build
+.PHONY : tcp_connection/fast
+
+#=============================================================================
+# Target rules for targets named mqttutils
+
+# Build rule for target.
+mqttutils: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 mqttutils
+.PHONY : mqttutils
+
+# fast build rule for target.
+mqttutils/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqttutils.dir/build.make CMakeFiles/mqttutils.dir/build
+.PHONY : mqttutils/fast
+
+#=============================================================================
+# Target rules for targets named mqtt_client
+
+# Build rule for target.
+mqtt_client: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 mqtt_client
+.PHONY : mqtt_client
+
+# fast build rule for target.
+mqtt_client/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt_client.dir/build.make CMakeFiles/mqtt_client.dir/build
+.PHONY : mqtt_client/fast
+
+#=============================================================================
 # Target rules for targets named ptc
 
 # Build rule for target.
@@ -153,6 +192,78 @@ src/main.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ptc.dir/build.make CMakeFiles/ptc.dir/src/main.c.s
 .PHONY : src/main.c.s
 
+src/mqtt_client.o: src/mqtt_client.c.o
+.PHONY : src/mqtt_client.o
+
+# target to build an object file
+src/mqtt_client.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt_client.dir/build.make CMakeFiles/mqtt_client.dir/src/mqtt_client.c.o
+.PHONY : src/mqtt_client.c.o
+
+src/mqtt_client.i: src/mqtt_client.c.i
+.PHONY : src/mqtt_client.i
+
+# target to preprocess a source file
+src/mqtt_client.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt_client.dir/build.make CMakeFiles/mqtt_client.dir/src/mqtt_client.c.i
+.PHONY : src/mqtt_client.c.i
+
+src/mqtt_client.s: src/mqtt_client.c.s
+.PHONY : src/mqtt_client.s
+
+# target to generate assembly for a file
+src/mqtt_client.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt_client.dir/build.make CMakeFiles/mqtt_client.dir/src/mqtt_client.c.s
+.PHONY : src/mqtt_client.c.s
+
+src/mqtt_utils.o: src/mqtt_utils.c.o
+.PHONY : src/mqtt_utils.o
+
+# target to build an object file
+src/mqtt_utils.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqttutils.dir/build.make CMakeFiles/mqttutils.dir/src/mqtt_utils.c.o
+.PHONY : src/mqtt_utils.c.o
+
+src/mqtt_utils.i: src/mqtt_utils.c.i
+.PHONY : src/mqtt_utils.i
+
+# target to preprocess a source file
+src/mqtt_utils.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqttutils.dir/build.make CMakeFiles/mqttutils.dir/src/mqtt_utils.c.i
+.PHONY : src/mqtt_utils.c.i
+
+src/mqtt_utils.s: src/mqtt_utils.c.s
+.PHONY : src/mqtt_utils.s
+
+# target to generate assembly for a file
+src/mqtt_utils.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqttutils.dir/build.make CMakeFiles/mqttutils.dir/src/mqtt_utils.c.s
+.PHONY : src/mqtt_utils.c.s
+
+src/tcp_connection.o: src/tcp_connection.c.o
+.PHONY : src/tcp_connection.o
+
+# target to build an object file
+src/tcp_connection.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tcp_connection.dir/build.make CMakeFiles/tcp_connection.dir/src/tcp_connection.c.o
+.PHONY : src/tcp_connection.c.o
+
+src/tcp_connection.i: src/tcp_connection.c.i
+.PHONY : src/tcp_connection.i
+
+# target to preprocess a source file
+src/tcp_connection.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tcp_connection.dir/build.make CMakeFiles/tcp_connection.dir/src/tcp_connection.c.i
+.PHONY : src/tcp_connection.c.i
+
+src/tcp_connection.s: src/tcp_connection.c.s
+.PHONY : src/tcp_connection.s
+
+# target to generate assembly for a file
+src/tcp_connection.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tcp_connection.dir/build.make CMakeFiles/tcp_connection.dir/src/tcp_connection.c.s
+.PHONY : src/tcp_connection.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -161,10 +272,22 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... mqtt_client"
+	@echo "... mqttutils"
 	@echo "... ptc"
+	@echo "... tcp_connection"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/mqtt_client.o"
+	@echo "... src/mqtt_client.i"
+	@echo "... src/mqtt_client.s"
+	@echo "... src/mqtt_utils.o"
+	@echo "... src/mqtt_utils.i"
+	@echo "... src/mqtt_utils.s"
+	@echo "... src/tcp_connection.o"
+	@echo "... src/tcp_connection.i"
+	@echo "... src/tcp_connection.s"
 .PHONY : help
 
 

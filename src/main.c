@@ -9,6 +9,10 @@
 #include <errno.h>
 #include <string.h>
 
+#include "tcp_connection.h"
+#include "mqtt_client.h"
+#include "mqtt_utils.h"
+
 int main ( int argc, char **argv ){
 
     if ( argc < 3 ){
@@ -16,88 +20,59 @@ int main ( int argc, char **argv ){
         return 1;
     }
 
-    printf("Konfiguracja adresu serwera...\n");
-    
-    /* Structure for holding server data */
+    /* Define new client */
+    struct mqtt_client client;
+
     struct addrinfo hints;
-    memset(&hints, 0, sizeof(hints));
 
-    /* SOCK_STREAM - we would like to use TCP connection */
-    hints.ai_socktype = SOCK_STREAM;
-    struct addrinfo *peer_address;
+    establish_tcp_connection(argv[1], argv[2], &client.tcp_socket);
 
-    /* If everything is correct, remote address will be in peer_address */
-    if ( getaddrinfo( argv[1], argv[2], &hints, &peer_address)){
-        fprintf(stderr, "getaddrinfo() failed. (%d)\n", 2);
-        return 1;
-    }
+    client.connect_flags = 0x02;
+    client.keep_alive_msb = 0x00;
+    client.user_name = "tomek";
+    client.password = "ddada";
+    strcpy(client.client_id, "AAAA");
 
-    /* Display message */
-
-    printf("Adres serwera do połączenia: \n");
-    char address_buffer[100];
-    char service_buffer[100];
-
-    getnameinfo(peer_address->ai_addr, peer_address->ai_addrlen,
-        address_buffer, sizeof(address_buffer),
-        service_buffer, sizeof(service_buffer),
-        NI_NUMERICHOST);
+    struct publish pub_info;
     
-    printf("%s %s\n", address_buffer, service_buffer);
+    pub_info.message_payload = "25";
+    pub_info.topic_name = "temperature";
+    pub_info.first_byte = 0b00110000;
 
-    /* Tworzenie gniazda do połączenia */
-    printf("Tworzenie gniazda...\n");
-    int socket_peer;
-    socket_peer = socket( peer_address->ai_family,
-            peer_address->ai_socktype, peer_address->ai_protocol );
-    
-    if ( socket_peer < 0){
-        fprintf(stderr, "socket() failed. (%d)\n", 2);
-        return 1;
-    }
-
-    printf("Nawiazywanie polaczenia...\n");
-
-    if ( connect(socket_peer,
-        peer_address->ai_addr, peer_address->ai_addrlen)){
-        fprintf(stderr, "connect() failed. (%d) \n", 2);
-        return 1;
-    }
-
-    freeaddrinfo(peer_address);
-
-    printf("Polaczono\n");
-
-    uint8_t message_to_send[] = {0x10, 0x0f, 0x00, 0x04, 0x4d, 0x51, 0x54, 0x54, 0x04, 0x00, 0x00, 0x0a, 0x00, 0x03, 0x41, 0x42, 0x43};
     char read[4096];
+    char message[100];
+    
+    int message_length = generate_connect_message(&client,message);
+
+    for ( int i = 0; i < message_length; ++i ){
+        printf("%02x", message[i]);
+    }
+    
+    printf("\n");
 
     int bytes_received = 2;
-
-    bytes_received = send(socket_peer,(char*)&message_to_send, sizeof(message_to_send), 0);
-
-    printf("%s %d\n", "Wyslano: ", bytes_received);
+    bytes_received = send(client.tcp_socket,(char*)&message, message_length, 0);
 
     bytes_received = 1;
+    int total_bytes = 0;
+
+    recv(client.tcp_socket, read, 4096, 0);
 
     int length = strlen(read);
 
-    while (bytes_received > 0)
-    {
-        bytes_received = recv(socket_peer, read, 4096, 0);
-
-        length = strlen(read);
-
-        for ( int i = 0; i < length; ++i ){
-            printf("%02x", read[i]);
-        }
-        printf("\n");
-        printf("%d\n", bytes_received);
+    for ( int i = 0; i < length; ++i ){
+        printf("%02x", read[i]);
     }
 
-    printf("\n");
+    printf("%s%d\n", "Message return code: ", interpret_connack_message(read));
 
-    printf("Konczenie polaczenia\n");
-    
-    close(socket_peer);
+    /*uint8_t message_publish[50];
+    length = generate_publish_message(&client, message_publish);*/
+    /*send(client.tcp_socket,message_publish,length,0);*/
+
+    publish(&client, &pub_info);
+
+
+    close(client.tcp_socket);
 
 }

@@ -1,3 +1,3 @@
 file(REMOVE_RECURSE
-  "libptc.a"
+  "libmqtt_client.a"
 )
