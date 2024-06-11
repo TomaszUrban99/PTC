@@ -33,7 +33,8 @@ struct publish {
     char *topic_name;
 
     /* Only present if QoS set to 1 or 2*/
-    uint8_t packet_identifier;
+    uint8_t packet_identifier_msb;
+    uint8_t packet_identifier_lsb;
 
     /* Stores message payload */
     char *message_payload;

@@ -19,6 +19,12 @@
 #define BIT6 0b01000000
 #define BIT7 0b10000000
 
+/* Control packet type */
+#define PUBACK_CONTROL_TYPE 0x40
+#define PUBREC_CONTROL_TYPE 0x50
+#define PUBREL_CONTROL_TYPE 0x60
+#define PUBCOMP_CONTROL_TYPE 0x70
+
 /* Length of client name */
 #define MQTT_CLIENT_ID_LENGTH 10
 
@@ -26,7 +32,13 @@
 #define CONNACK_RETURN_CODE_POSITION 3
 
 /* Length of messages */
+#define CONNECT_MESSAGE_LENGTH 256
 #define CONNACK_MESSAGE_LENGTH 5
+
+#define PUBACK_MESSAGE_LENGTH 4
+#define PUBREC_MESSAGE_LENGTH 4
+#define PUBREL_MESSAGE_LENGTH 4
+#define PUBCOMP_MESSAGE_LENGTH 4
 
 /* */
 struct mqtt_client {
@@ -126,10 +138,33 @@ int generate_publish_message (  struct mqtt_client *client,
 int publish ( struct mqtt_client *client, struct publish *pub_info );
 
 /*!
+    \brief Check correctness of puback message and information contained inside
+*/
+int interpret_puback ( struct publish *pub_info, uint8_t *puback_message);
+
+/*!
     \brief Receive publish acknowledgment
 */
 int receive_puback ( struct mqtt_client *client, struct publish *pub_info );
 
+/*!
+    \brief Check and interpret pubrec message
+*/
+int interpret_pubrec ( struct publish *pub_info, uint8_t *pubrec_message );
 
+/*!
+    \brief Receive PUBREC publish receivde message
+*/
+int receive_pubrec ( struct mqtt_client *client, struct publish *pub_info )
+
+/*!
+    \brief Generate pubrel message
+*/
+void generate_pubrel_message ( struct publish *pub_info, uint8_t *pubrel_message );
+
+/*!
+    \brief Receive pubcomp message
+*/
+int receive_pubcomp ( struct mqtt_client *client, struct publish *pub_info );
 
 #endif

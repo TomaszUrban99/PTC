@@ -39,21 +39,7 @@ int main ( int argc, char **argv ){
     pub_info.topic_name = "temperature";
     pub_info.first_byte = 0b00110000;
 
-    char read[4096];
-    char message[100];
-    
-    int message_length = generate_connect_message(&client,message);
-
-    for ( int i = 0; i < message_length; ++i ){
-        printf("%02x", message[i]);
-    }
-    
-    printf("\n");
-
-    int bytes_received = 2;
-    bytes_received = send(client.tcp_socket,(char*)&message, message_length, 0);
-
-    printf("%s%d\n", "Receive: ", receive_connack(&client));
+    connect_mqtt(&client);
 
     /*uint8_t message_publish[50];
     length = generate_publish_message(&client, message_publish);*/
