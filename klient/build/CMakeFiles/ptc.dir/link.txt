@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/ptc.dir/src/main.c.o -o ptc  libmqtt_client.a libtcp_connection.a libmqttutils.a 
