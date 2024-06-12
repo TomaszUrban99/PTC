@@ -38,6 +38,8 @@ CMakeFiles/mqtt_client.dir/src/mqtt_client.c.o: /home/tomasz/Documents/Studia/PT
   /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
   /usr/include/strings.h \
   /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/publish.h \
+  /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/subscribe.h \
+  /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/topic.hh \
   /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/mqtt_utils.h \
   /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/tcp_connection.h \
   /usr/include/x86_64-linux-gnu/sys/types.h \
@@ -164,6 +166,10 @@ CMakeFiles/mqtt_client.dir/src/mqtt_client.c.o: /home/tomasz/Documents/Studia/PT
 
 /usr/include/x86_64-linux-gnu/gnu/stubs.h:
 
+/usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:
+
+/usr/include/x86_64-linux-gnu/bits/types.h:
+
 /usr/include/x86_64-linux-gnu/bits/types/FILE.h:
 
 /usr/include/features.h:
@@ -202,6 +208,12 @@ CMakeFiles/mqtt_client.dir/src/mqtt_client.c.o: /home/tomasz/Documents/Studia/PT
 
 /usr/include/x86_64-linux-gnu/sys/types.h:
 
+/usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/time_t.h:
+
 /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
 
 /usr/include/x86_64-linux-gnu/sys/socket.h:
@@ -224,11 +236,13 @@ CMakeFiles/mqtt_client.dir/src/mqtt_client.c.o: /home/tomasz/Documents/Studia/PT
 
 /usr/include/stdio.h:
 
-/home/tomasz/Documents/Studia/PTC/projekt/klient/inc/mqtt_client.h:
-
 /usr/include/x86_64-linux-gnu/bits/endianness.h:
 
 /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/publish.h:
+
+/home/tomasz/Documents/Studia/PTC/projekt/klient/inc/mqtt_client.h:
+
+/home/tomasz/Documents/Studia/PTC/projekt/klient/inc/subscribe.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h:
 
@@ -249,6 +263,8 @@ CMakeFiles/mqtt_client.dir/src/mqtt_client.c.o: /home/tomasz/Documents/Studia/PT
 /usr/include/features-time64.h:
 
 /usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
+
+/home/tomasz/Documents/Studia/PTC/projekt/klient/inc/topic.hh:
 
 /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
 
@@ -283,13 +299,3 @@ CMakeFiles/mqtt_client.dir/src/mqtt_client.c.o: /home/tomasz/Documents/Studia/PT
 /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
 
 /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/time_t.h:
-
-/usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h:
-
-/usr/include/x86_64-linux-gnu/bits/types.h:
-
-/usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:

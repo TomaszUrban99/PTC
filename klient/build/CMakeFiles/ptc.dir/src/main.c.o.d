@@ -84,6 +84,8 @@ CMakeFiles/ptc.dir/src/main.c.o: \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
  /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/publish.h \
+ /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/subscribe.h \
+ /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/topic.hh \
  /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/mqtt_utils.h \
  /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/tcp_connection.h \
  /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/mqtt_utils.h

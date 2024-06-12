@@ -236,3 +236,40 @@ int receive_pubcomp ( struct mqtt_client *client, struct publish *pub_info ){
 
     return 0;
 }
+
+int generate_subscribe_message ( struct mqtt_client *client, 
+                                    struct subscribe *sub_info, uint8_t *subscribe_message ){
+    
+    /* Set packet control type */
+    subscribe_message[0] = SUBSCRIBE_CONTROL_TYPE;
+
+    /* Entire message length */
+    int message_length = 4;
+
+    /* Set packet identifier */
+    subscribe_message[2] = sub_info->packet_identifier_msb;
+    subscribe_message[3] = sub_info->packet_identifier_lsb;
+
+    /* Encode topics */
+    for ( int i = 0; i < sub_info->topic_numbers; ++i ){
+
+        /* ---------------- TOPIC FILTER ------------------------------------------------------ */
+            subscribe_message[message_length] = sub_info->subscribed_topics[i]->topic_length_msb;
+            subscribe_message[message_length+1] = sub_info->subscribed_topics[i]->topic_length_lsb;
+            subscribe_message[message_length+2] = sub_info->subscribed_topics[i]->qos;
+
+        /* Topic filter header length */
+        message_length = message_length + 3;
+
+        for ( int j = 0; j < sub_info->subscribed_topics[i]->topic_length_lsb; ++j ){
+            subscribe_message[message_length+j] = sub_info->subscribed_topics[i]->topic_name[j];
+        }
+
+        /* Calculate new message length */
+        message_length = message_length + sub_info->subscribed_topics[i]->topic_length_lsb;
+    }
+
+    subscribe_message[1] = message_length - 2;
+
+    return message_length;
+}

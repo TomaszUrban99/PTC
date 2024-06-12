@@ -97,12 +97,18 @@ CMakeFiles/ptc.dir/src/main.c.o: /home/tomasz/Documents/Studia/PTC/projekt/klien
   /usr/include/stdint.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
   /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/publish.h \
+  /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/subscribe.h \
+  /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/topic.hh \
   /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/mqtt_utils.h \
   /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/tcp_connection.h \
   /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/mqtt_utils.h
 
 
+/home/tomasz/Documents/Studia/PTC/projekt/klient/inc/topic.hh:
+
 /usr/include/x86_64-linux-gnu/bits/wchar.h:
+
+/home/tomasz/Documents/Studia/PTC/projekt/klient/inc/subscribe.h:
 
 /home/tomasz/Documents/Studia/PTC/projekt/klient/inc/mqtt_client.h:
 

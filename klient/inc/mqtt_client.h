@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "publish.h"
+#include "subscribe.h"
 #include "mqtt_utils.h"
 #include "tcp_connection.h"
 
@@ -24,6 +25,7 @@
 #define PUBREC_CONTROL_TYPE 0x50
 #define PUBREL_CONTROL_TYPE 0x60
 #define PUBCOMP_CONTROL_TYPE 0x70
+#define SUBSCRIBE_CONTROL_TYPE 0x80
 
 /* Length of client name */
 #define MQTT_CLIENT_ID_LENGTH 10
@@ -39,6 +41,11 @@
 #define PUBREC_MESSAGE_LENGTH 4
 #define PUBREL_MESSAGE_LENGTH 4
 #define PUBCOMP_MESSAGE_LENGTH 4
+
+/* Level of QoS */
+#define LEVEL_QOS_0 0
+#define LEVEL_QOS_1 1
+#define LEVEL_QOS_2 2
 
 /* */
 struct mqtt_client {
@@ -155,7 +162,7 @@ int interpret_pubrec ( struct publish *pub_info, uint8_t *pubrec_message );
 /*!
     \brief Receive PUBREC publish receivde message
 */
-int receive_pubrec ( struct mqtt_client *client, struct publish *pub_info )
+int receive_pubrec ( struct mqtt_client *client, struct publish *pub_info );
 
 /*!
     \brief Generate pubrel message
@@ -166,5 +173,15 @@ void generate_pubrel_message ( struct publish *pub_info, uint8_t *pubrel_message
     \brief Receive pubcomp message
 */
 int receive_pubcomp ( struct mqtt_client *client, struct publish *pub_info );
+
+
+
+/*!
+    \brief Generate subscribe message
+    
+    \retval Length of subscribe message
+*/
+int generate_subscribe_message ( struct mqtt_client *client, 
+                                    struct subscribe *sub_info, uint8_t *subscribe_message );
 
 #endif
