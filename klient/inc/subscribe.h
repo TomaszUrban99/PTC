@@ -3,6 +3,12 @@
 
 #define MAX_TOPIC_NUMBER 3
 
+/* Suback return codes */
+#define SUCCESS_QOS_0 0x00
+#define SUCCESS_QOS_1 0x01
+#define SUCCESS_QOS_2 0x02
+#define FAILURE 0x80
+
 #include <stdint.h>
 #include "topic.hh"
 

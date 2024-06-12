@@ -25,7 +25,9 @@
 #define PUBREC_CONTROL_TYPE 0x50
 #define PUBREL_CONTROL_TYPE 0x60
 #define PUBCOMP_CONTROL_TYPE 0x70
-#define SUBSCRIBE_CONTROL_TYPE 0x80
+
+#define SUBSCRIBE_CONTROL_TYPE 0x82
+#define SUBACK_CONTROL_TYPE 0x90
 
 /* Length of client name */
 #define MQTT_CLIENT_ID_LENGTH 10
@@ -41,6 +43,10 @@
 #define PUBREC_MESSAGE_LENGTH 4
 #define PUBREL_MESSAGE_LENGTH 4
 #define PUBCOMP_MESSAGE_LENGTH 4
+
+#define SUBSCRIBE_MESSAGE_LENGTH 256
+/* Look at maximum number of topics: #define MAX_TOPIC_NUMBER 3 in subscribe.h */
+#define SUBACK_MESSAGE_LENGTH 10 
 
 /* Level of QoS */
 #define LEVEL_QOS_0 0
@@ -183,5 +189,23 @@ int receive_pubcomp ( struct mqtt_client *client, struct publish *pub_info );
 */
 int generate_subscribe_message ( struct mqtt_client *client, 
                                     struct subscribe *sub_info, uint8_t *subscribe_message );
+
+/*!
+    \brief Interpret SUBACK response
+*/
+int interpret_suback_message ( struct subscribe *sub_info, uint8_t *suback_message, int received_bytes );
+
+/*!
+    \brief Receive suback message
+
+    According to MQTT v3.1.1 on subscribe message, server must response with 
+    SUBACK message
+*/
+int receive_suback ( struct mqtt_client *client, struct subscribe *sub_info );
+
+/*!
+    \brief Subscribe
+*/
+int subscribe ( struct mqtt_client *client, struct subscribe *sub_info );
 
 #endif

@@ -256,10 +256,9 @@ int generate_subscribe_message ( struct mqtt_client *client,
         /* ---------------- TOPIC FILTER ------------------------------------------------------ */
             subscribe_message[message_length] = sub_info->subscribed_topics[i]->topic_length_msb;
             subscribe_message[message_length+1] = sub_info->subscribed_topics[i]->topic_length_lsb;
-            subscribe_message[message_length+2] = sub_info->subscribed_topics[i]->qos;
 
         /* Topic filter header length */
-        message_length = message_length + 3;
+        message_length = message_length + 2;
 
         for ( int j = 0; j < sub_info->subscribed_topics[i]->topic_length_lsb; ++j ){
             subscribe_message[message_length+j] = sub_info->subscribed_topics[i]->topic_name[j];
@@ -267,9 +266,77 @@ int generate_subscribe_message ( struct mqtt_client *client,
 
         /* Calculate new message length */
         message_length = message_length + sub_info->subscribed_topics[i]->topic_length_lsb;
+        
+        subscribe_message[message_length] = sub_info->subscribed_topics[i]->qos;
+        message_length++;
     }
 
     subscribe_message[1] = message_length - 2;
 
     return message_length;
+}
+
+int interpret_suback_message ( struct subscribe *sub_info, uint8_t *suback_message, int received_bytes ){
+
+    if (suback_message[0] != SUBACK_CONTROL_TYPE ){
+        fprintf(stderr,"suback(): incorrect control type");
+        return -1;
+    }
+
+    if ( suback_message[2] != sub_info->packet_identifier_msb 
+        || suback_message[3] != sub_info->packet_identifier_lsb ){
+            fprintf(stderr,"suback(): incorrect packet identifier");
+            return -1;
+    }
+
+    printf("%s%d\n", "Received bytes: ", received_bytes);
+
+    if ( received_bytes - 4 != sub_info->topic_numbers ){
+        fprintf(stderr,"suback(): incorrect number of topic's responses");
+        return -1;
+    }
+
+    int counter_correct = 0;
+
+    for ( int i = 0; i < sub_info->topic_numbers; ++ i){
+
+        if ( suback_message[4 + i] != FAILURE ){
+            sub_info->subscribed_topics[i]->topic_return_code = suback_message[4 + i];
+        }
+        else{
+            fprintf(stderr,"%s%d%s", "suback(): ", i, "-topic failure");
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
+int receive_suback ( struct mqtt_client *client, struct subscribe *sub_info ){
+
+    uint8_t suback_message[SUBACK_MESSAGE_LENGTH];
+
+    int received_bytes = recv(client->tcp_socket,suback_message,SUBACK_MESSAGE_LENGTH,0);
+
+    if ( received_bytes < 0){
+        fprintf(stderr,"receive_suback(): failed to receive suback message");
+        return -1;
+    }
+
+    return interpret_suback_message(sub_info,suback_message,received_bytes);
+}
+
+int subscribe ( struct mqtt_client *client, struct subscribe *sub_info ){
+
+    uint8_t subscribe_message[SUBSCRIBE_MESSAGE_LENGTH];
+
+    /* Generate subscribe message. Length of message is returned */
+    int message_length = generate_subscribe_message(client,sub_info,subscribe_message);
+
+    if ( send(client->tcp_socket, (char*)&subscribe_message, message_length, 0) < message_length ){
+        fprintf(stderr, "subscribe(): failed to send subscribe message" );
+        return -1;
+    }
+
+    return 0;
 }
