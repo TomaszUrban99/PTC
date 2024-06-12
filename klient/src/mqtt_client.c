@@ -296,16 +296,16 @@ int interpret_suback_message ( struct subscribe *sub_info, uint8_t *suback_messa
         return -1;
     }
 
-    int counter_correct = 0;
-
     for ( int i = 0; i < sub_info->topic_numbers; ++ i){
 
+        sub_info->subscribed_topics[i]->topic_return_code = suback_message[4 + i];
+
         if ( suback_message[4 + i] != FAILURE ){
-            sub_info->subscribed_topics[i]->topic_return_code = suback_message[4 + i];
+            sub_info->subscribed_topics[i]->is_subscribed = 1;
         }
         else{
+            sub_info->subscribed_topics[i]->is_subscribed = 0;
             fprintf(stderr,"%s%d%s", "suback(): ", i, "-topic failure");
-            return -1;
         }
     }
 
@@ -339,4 +339,114 @@ int subscribe ( struct mqtt_client *client, struct subscribe *sub_info ){
     }
 
     return 0;
+}
+
+int generate_unsubscribe ( struct subscribe *sub_info, 
+    uint8_t *unsubscribe_message, int topic_index ){
+
+        unsubscribe_message[0] = UNSUBSCRIBE_CONTROL_TYPE;
+
+        int message_length = 4;
+
+        unsubscribe_message[2] = sub_info->packet_identifier_msb;
+        unsubscribe_message[3] = sub_info->packet_identifier_lsb;
+
+        if ( sub_info->subscribed_topics[topic_index]->is_subscribed ){
+            
+            /* Encode topic to unsubscribe */
+            unsubscribe_message[4] = sub_info->subscribed_topics[topic_index]->topic_length_msb;
+            unsubscribe_message[5] = sub_info->subscribed_topics[topic_index]->topic_length_lsb;
+
+            /* Calculate message length */
+            message_length = message_length + 2 + unsubscribe_message[5];
+
+            for ( int i = 0; i < unsubscribe_message[5]; ++i ){
+                unsubscribe_message[message_length + i] = sub_info->subscribed_topics[topic_index]->topic_name[i];
+            }
+
+            unsubscribe_message[1] = message_length - 2;
+            return message_length;
+        }
+        else {
+            fprintf(stderr,"unsubscribe(): not subscribed");
+            return -1;
+        }
+}
+
+int unsubscribe ( struct mqtt_client *client, struct  subscribe *sub_info, int topic_index ){
+
+    uint8_t unsubscribe_message[UNSUBSCRIBE_MESSAGE_LENGTH];
+
+    /* Generate unsubscribe message */
+    int message_length = generate_unsubscribe(sub_info,unsubscribe_message,topic_index);
+
+    if ( send(client->tcp_socket,(char*) &unsubscribe_message, message_length, 0) < message_length ){
+        fprintf(stderr,"unsubscribe(): failed to send unsubscribe message");
+        return -1;
+    }
+
+    return 0;
+}
+
+int interpret_unsuback_message ( struct subscribe *sub_info, uint8_t *unsuback_message, int topic_index){
+
+    if ( unsuback_message[0] != UNSUBACK_CONTROL_TYPE ){
+        fprintf(stderr, "unsuback(): incorrect unsuback control type");
+        return -1;
+    }
+
+    if ( unsuback_message[2] != sub_info->packet_identifier_msb ||
+            unsuback_message[3] != sub_info->packet_identifier_lsb ){
+                fprintf(stderr, "unsuback(): incorrect packet identifier");
+                return -1;
+            }
+    
+    sub_info->subscribed_topics[topic_index]->is_subscribed = 0;
+    return 0;
+}
+
+int receive_unsuback ( struct mqtt_client *client, struct subscribe *sub_info, int topic_index ){
+
+    uint8_t unsuback_message[UNSUBACK_MESSAGE_LENGTH];
+
+    int bytes_received = recv(client->tcp_socket, unsuback_message, UNSUBACK_MESSAGE_LENGTH, 0);
+
+    if ( bytes_received < UNSUBACK_MESSAGE_LENGTH){
+        fprintf(stderr, "unsuback(): failed to receive unsuback message");
+        return -1;
+    }
+}
+
+int pingreq ( struct mqtt_client *client ){
+
+    uint8_t pingreq_message[PINGREQ_MESSAGE_LENGTH];
+
+    pingreq_message[0] = PINGEQ_CONTROL_TYPE;
+    pingreq_message[1] = 0x00;
+
+    if ( send(client->tcp_socket,(char*)&pingreq_message,PINGREQ_MESSAGE_LENGTH,0) < PINGREQ_MESSAGE_LENGTH ){
+        fprintf(stderr,"pingreq(): failed to send pingreq");
+        return -1;
+    }
+
+    return 0;
+}
+
+int receive_pingresponse ( struct mqtt_client *client ){
+
+    uint8_t pingresp_message[PINGRESP_MESSAGE_LENGTH];
+
+    int bytes_received = recv(client->tcp_socket, (char*) &pingresp_message, PINGRESP_MESSAGE_LENGTH, 0);
+
+    if ( bytes_received < PINGRESP_MESSAGE_LENGTH ){
+        fprintf(stderr,"pingresp(): failed to receive pingresp");
+        return -1;
+    }
+    
+    if ( pingresp_message[0] == PINGRESP_CONTROL_TYPE &&
+    pingresp_message[1] == 0x00 ){
+        return 0;
+    }
+
+    return -1;
 }

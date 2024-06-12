@@ -28,6 +28,11 @@
 
 #define SUBSCRIBE_CONTROL_TYPE 0x82
 #define SUBACK_CONTROL_TYPE 0x90
+#define UNSUBSCRIBE_CONTROL_TYPE 0xa2
+#define UNSUBACK_CONTROL_TYPE 0xb0
+
+#define PINGEQ_CONTROL_TYPE 0xc0
+#define PINGRESP_CONTROL_TYPE 0xd0
 
 /* Length of client name */
 #define MQTT_CLIENT_ID_LENGTH 10
@@ -47,6 +52,11 @@
 #define SUBSCRIBE_MESSAGE_LENGTH 256
 /* Look at maximum number of topics: #define MAX_TOPIC_NUMBER 3 in subscribe.h */
 #define SUBACK_MESSAGE_LENGTH 10 
+#define UNSUBSCRIBE_MESSAGE_LENGTH 128
+#define UNSUBACK_MESSAGE_LENGTH 4
+
+#define PINGREQ_MESSAGE_LENGTH 2
+#define PINGRESP_MESSAGE_LENGTH 2
 
 /* Level of QoS */
 #define LEVEL_QOS_0 0
@@ -207,5 +217,33 @@ int receive_suback ( struct mqtt_client *client, struct subscribe *sub_info );
     \brief Subscribe
 */
 int subscribe ( struct mqtt_client *client, struct subscribe *sub_info );
+
+/*!
+    \brief Generate unsubscribe message
+*/
+int generate_unsubscribe ( struct subscribe *sub_info, 
+    uint8_t *unsubscribe_message, int topic_index );
+
+/*!
+    \brief Unsubscribe
+*/
+int unsubscribe ( struct mqtt_client *client, struct subscribe *sub_info, int topic_index );
+
+int interpret_unsuback_message ( struct subscribe *sub_info, uint8_t *unsuback_message, int topic_index);
+
+/*!
+    \brief Receive unsuback
+*/
+int receive_unsuback ( struct mqtt_client *client, struct subscribe *sub_info, int topic_index );
+
+/*!
+    \brief Send ping request 
+*/
+int pingreq ( struct mqtt_client *client );
+
+/*!
+    \brief Receive ping response
+*/
+int receive_pingresponse ( struct mqtt_client *client );
 
 #endif
