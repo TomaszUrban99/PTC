@@ -358,11 +358,13 @@ int generate_unsubscribe ( struct subscribe *sub_info,
             unsubscribe_message[5] = sub_info->subscribed_topics[topic_index]->topic_length_lsb;
 
             /* Calculate message length */
-            message_length = message_length + 2 + unsubscribe_message[5];
+            message_length = message_length + 2;
 
             for ( int i = 0; i < unsubscribe_message[5]; ++i ){
                 unsubscribe_message[message_length + i] = sub_info->subscribed_topics[topic_index]->topic_name[i];
             }
+
+            message_length = message_length + sub_info->subscribed_topics[topic_index]->topic_length_lsb;
 
             unsubscribe_message[1] = message_length - 2;
             return message_length;

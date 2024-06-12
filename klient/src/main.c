@@ -70,8 +70,6 @@ int main ( int argc, char **argv ){
     subscribe(&client,&ss);
     printf("%s%d\n", "suback code(): ", receive_suback(&client,&ss));
 
-    /*generate_unsubscribe(&ss,subscribe_message,1);*/
-
     unsubscribe(&client,&ss,1);
     receive_unsuback(&client,&ss, 1);
 
