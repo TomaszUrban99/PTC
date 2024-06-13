@@ -16,11 +16,10 @@
 
 struct tcp_client_info {
 
+    int is_connected;
     socklen_t address_length;
     struct sockaddr_storage address;
     int socket;
-    char request[MAX_REQUEST_SIZE + 1];
-    int received;
     struct tcp_client_info *next;
 };
 

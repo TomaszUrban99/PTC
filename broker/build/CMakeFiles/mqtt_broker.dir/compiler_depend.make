@@ -96,14 +96,16 @@ CMakeFiles/mqtt_broker.dir/src/mqtt_broker.c.o: /home/tomasz/Documents/Studia/PT
   /usr/include/x86_64-linux-gnu/asm/errno.h \
   /usr/include/asm-generic/errno.h \
   /usr/include/asm-generic/errno-base.h \
-  /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/tcp_connection.h \
+  /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/tcp_client_info.h \
   /usr/include/stdlib.h \
   /usr/include/x86_64-linux-gnu/bits/waitflags.h \
   /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
   /usr/include/alloca.h \
   /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
-  /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/tcp_client_info.h
+  /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/tcp_connection.h
 
+
+/home/tomasz/Documents/Studia/PTC/projekt/broker/inc/tcp_connection.h:
 
 /usr/include/alloca.h:
 
@@ -112,8 +114,6 @@ CMakeFiles/mqtt_broker.dir/src/mqtt_broker.c.o: /home/tomasz/Documents/Studia/PT
 /usr/include/x86_64-linux-gnu/bits/waitflags.h:
 
 /usr/include/stdlib.h:
-
-/home/tomasz/Documents/Studia/PTC/projekt/broker/inc/tcp_connection.h:
 
 /usr/include/asm-generic/errno-base.h:
 

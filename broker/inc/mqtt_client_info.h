@@ -11,12 +11,16 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "tcp_client_info.h"
+
 #define MQTT_CLIENT_ID_LENGTH 10
 
 struct mqtt_client_info {
 
-       char *ip_address; /* IP address */
-       char *port_number; /* Port number */
+      int is_connected;
+
+       /*char *ip_address; /* IP address */
+       /*char *port_number; /* Port number */
    
         int tcp_socket;
         char client_id[MQTT_CLIENT_ID_LENGTH];
@@ -45,6 +49,8 @@ struct mqtt_client_info {
         /* Time interval measured in seconds */
         uint8_t keep_alive_msb;
         uint8_t keep_alive_lsb;
+
+        struct mqtt_client_info *next;
     
 };
 

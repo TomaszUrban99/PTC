@@ -19,6 +19,10 @@
 #define BIT7 0b10000000
 
 /* Control packet type */
+#define CONNECT_CONTROL_TYPE 0x10
+#define CONNACK_CONTROL_TYPE 0x20
+
+#define PUBLISH_CONTROL_TYPE 0x30
 #define PUBACK_CONTROL_TYPE 0x40
 #define PUBREC_CONTROL_TYPE 0x50
 #define PUBREL_CONTROL_TYPE 0x60
@@ -57,10 +61,14 @@
 
 #define DISCONNECT_MESSAGE_LENGTH 2
 
+#define MQTT_PROTOCOL_LEVEL 0x04
+
 /* Level of QoS */
 #define LEVEL_QOS_0 0
 #define LEVEL_QOS_1 1
 #define LEVEL_QOS_2 2
+
+#define UNACCEPTABLE_PROTOCOL_LEVEL 0x01
 
 /* */
 struct mqtt_broker {
@@ -73,8 +81,10 @@ struct mqtt_broker {
     /* Number of connected clients */
     int connected_clients_number;
 
+    struct tcp_client_info clients[10];
+
     /* Pointer to the first connected client */
-    struct mqtt_client_info *first_connected_client;
+    struct mqtt_client_info mqtt_clients[10];
 
 };
 
@@ -83,5 +93,22 @@ struct mqtt_broker {
 #define REFUSED_ID_NOT_ALLOWED 2
 #define REFUSED_SERVER_UNAVAILABLE 3
 
+uint8_t *get_client_id ( uint8_t *message);
+
+int find_corresponding_mqtt_client ( struct mqtt_broker *broker, struct tcp_client_info *client );
+
+struct tcp_client_info *find_tcp_client ( struct mqtt_broker *broker, int tcp_socket );
+
+struct tcp_client_info *find_free_tcp_client ( struct mqtt_broker *broker );
+
+int generate_connack ( struct mqtt_broker *broker, uint8_t *message );
+
+int send_connack ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t return_code );
+
+int interpret_connect ( struct mqtt_broker *broker, struct tcp_client_info *client );
+
+int receive_connect ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t *message);
+
+void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t *message );
 
 #endif

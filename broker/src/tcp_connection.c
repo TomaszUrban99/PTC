@@ -101,22 +101,17 @@ fd_set wait_on_clients ( int *listen_socket, struct tcp_client_info *clients ){
     
     FD_ZERO(&reads);
     FD_SET(*listen_socket, &reads);
-    
     int max_socket = *listen_socket;
-    struct tcp_client_info *ci;
-    
-    ci = clients;
+
+    struct tcp_client_info *ci = clients;
 
     while(ci) {
 
         FD_SET(ci->socket, &reads);
 
         if (ci->socket > max_socket){
-        
             max_socket = ci->socket;
-             printf("ssssss33\n");
         }
-         printf("ssssss443\n");
         ci = ci->next;
     }
 
@@ -130,8 +125,7 @@ fd_set wait_on_clients ( int *listen_socket, struct tcp_client_info *clients ){
 
 struct tcp_client_info *get_client ( int socket, struct tcp_client_info *clients ){
     
-    struct tcp_client_info *ci;
-    ci = clients;
+    struct tcp_client_info *ci = clients;
 
     while (ci)
     {
@@ -171,6 +165,7 @@ const char *get_client_address ( struct tcp_client_info *ci ){
 
 void drop_client ( struct tcp_client_info *client, struct tcp_client_info *clients ){
 
+
     close(client->socket);
 
     struct tcp_client_info **p = &clients;
@@ -188,4 +183,47 @@ void drop_client ( struct tcp_client_info *client, struct tcp_client_info *clien
 
     fprintf(stderr, "drop_client(): not found. \n");
     exit(1);
+}
+
+int accept_new_connection ( struct tcp_client_info *client, fd_set *master, int *max_socket, int *listen_socket ){
+
+    int i = 0;
+
+    while ( i < 10 && client[i].is_connected){
+        ++i;
+    }
+
+    client->address_length = sizeof(client->address);
+    client->socket = accept(*listen_socket, (struct sockaddr*) &client->address, &client->address_length);
+ 
+    if (client->socket < 0) {
+        fprintf(stderr, "accept() failed\n");
+        return 1;
+    }
+    
+    /* Add new client to master set */
+    FD_SET(client->socket, master);
+ 
+    if (client->socket > *max_socket)
+        *max_socket = client->socket;
+    
+    char address_buffer[100];
+    getnameinfo((struct sockaddr*)&client->address, client->address_length,
+         address_buffer, sizeof(address_buffer), 0, 0, NI_NUMERICHOST);
+    
+    printf("New connection from %s\n", address_buffer);
+
+    return 0;
+}
+
+int receive_message ( int *client_socket, uint8_t *message, int message_length ){
+
+    int received_bytes = recv( *client_socket, message, message_length, 0);
+
+    if ( received_bytes < 1 ){
+        fprintf(stderr,"receive message(): failed to receive message\n");
+        return -1;
+    }
+
+    return received_bytes;
 }
