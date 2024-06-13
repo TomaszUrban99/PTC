@@ -76,6 +76,5 @@ int main ( int argc, char **argv ){
     pingreq(&client);
     receive_pingresponse(&client);
 
-    close(client.tcp_socket);
-
+    disconnect(&client);
 }

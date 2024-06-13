@@ -452,3 +452,30 @@ int receive_pingresponse ( struct mqtt_client *client ){
 
     return -1;
 }
+
+int send_disconnect ( struct mqtt_client *client ){
+
+    uint8_t disconnect_message[DISCONNECT_MESSAGE_LENGTH];
+
+    /* Prepare message */
+    disconnect_message[0] = DISCONNECT_CONTROL_TYPE;
+    disconnect_message[1] = 0x00;
+
+    if ( send(client->tcp_socket, (char*) &disconnect_message, 
+        DISCONNECT_MESSAGE_LENGTH, 0) < DISCONNECT_MESSAGE_LENGTH ){
+            fprintf(stderr, "send_disconnect(): failed to send disconnect message\n");
+            return -1;
+        }
+
+    return 0;
+}
+
+int disconnect ( struct mqtt_client *client ){
+
+    if ( send_disconnect(client) < 0 ){
+        fprintf(stderr, "disconnect(): failed to send disconnect\n");
+        return -1;
+    }
+
+    return close(client->tcp_socket);
+}

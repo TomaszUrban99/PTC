@@ -34,6 +34,8 @@
 #define PINGEQ_CONTROL_TYPE 0xc0
 #define PINGRESP_CONTROL_TYPE 0xd0
 
+#define DISCONNECT_CONTROL_TYPE 0Xe0
+
 /* Length of client name */
 #define MQTT_CLIENT_ID_LENGTH 10
 
@@ -57,6 +59,8 @@
 
 #define PINGREQ_MESSAGE_LENGTH 2
 #define PINGRESP_MESSAGE_LENGTH 2
+
+#define DISCONNECT_MESSAGE_LENGTH 2
 
 /* Level of QoS */
 #define LEVEL_QOS_0 0
@@ -245,5 +249,15 @@ int pingreq ( struct mqtt_client *client );
     \brief Receive ping response
 */
 int receive_pingresponse ( struct mqtt_client *client );
+
+/*!
+    \brief Send_disconnect message
+*/
+int send_disconnect ( struct mqtt_client *client );
+
+/*!
+    \brief Disconnect from server
+*/
+int disconnect ( struct mqtt_client *client );
 
 #endif
