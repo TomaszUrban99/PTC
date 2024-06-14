@@ -101,13 +101,17 @@ CMakeFiles/ptc_server.dir/src/main.c.o: /home/tomasz/Documents/Studia/PTC/projek
   /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h \
   /usr/include/stdint.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
+  /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/mqtt_broker_utils.h \
   /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/mqtt_client_info.h \
+  /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/topic.hh \
   /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/tcp_client_info.h \
   /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/tcp_connection.h \
   /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/tcp_connection.h
 
 
 /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/tcp_connection.h:
+
+/home/tomasz/Documents/Studia/PTC/projekt/broker/inc/mqtt_broker_utils.h:
 
 /usr/include/x86_64-linux-gnu/bits/wchar.h:
 
@@ -132,6 +136,8 @@ CMakeFiles/ptc_server.dir/src/main.c.o: /home/tomasz/Documents/Studia/PTC/projek
 /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/FILE.h:
+
+/home/tomasz/Documents/Studia/PTC/projekt/broker/inc/topic.hh:
 
 /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
 

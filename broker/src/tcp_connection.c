@@ -211,6 +211,8 @@ int accept_new_connection ( struct tcp_client_info *client, fd_set *master, int 
     getnameinfo((struct sockaddr*)&client->address, client->address_length,
          address_buffer, sizeof(address_buffer), 0, 0, NI_NUMERICHOST);
     
+    client->is_connected = 1;
+    
     printf("New connection from %s\n", address_buffer);
 
     return 0;

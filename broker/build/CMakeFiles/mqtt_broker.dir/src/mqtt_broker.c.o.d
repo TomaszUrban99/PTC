@@ -32,6 +32,7 @@ CMakeFiles/mqtt_broker.dir/src/mqtt_broker.c.o: \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /usr/include/strings.h \
+ /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/mqtt_broker_utils.h \
  /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/mqtt_client_info.h \
  /usr/include/x86_64-linux-gnu/sys/types.h \
  /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
@@ -82,6 +83,7 @@ CMakeFiles/mqtt_broker.dir/src/mqtt_broker.c.o: \
  /usr/include/x86_64-linux-gnu/bits/errno.h /usr/include/linux/errno.h \
  /usr/include/x86_64-linux-gnu/asm/errno.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
+ /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/topic.hh \
  /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/tcp_client_info.h \
  /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h /usr/include/alloca.h \

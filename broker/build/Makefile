@@ -130,6 +130,19 @@ tcp_connection/fast:
 .PHONY : tcp_connection/fast
 
 #=============================================================================
+# Target rules for targets named mqtt_utils
+
+# Build rule for target.
+mqtt_utils: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 mqtt_utils
+.PHONY : mqtt_utils
+
+# fast build rule for target.
+mqtt_utils/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt_utils.dir/build.make CMakeFiles/mqtt_utils.dir/build
+.PHONY : mqtt_utils/fast
+
+#=============================================================================
 # Target rules for targets named mqtt_broker
 
 # Build rule for target.
@@ -203,6 +216,30 @@ src/mqtt_broker.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt_broker.dir/build.make CMakeFiles/mqtt_broker.dir/src/mqtt_broker.c.s
 .PHONY : src/mqtt_broker.c.s
 
+src/mqtt_broker_utils.o: src/mqtt_broker_utils.c.o
+.PHONY : src/mqtt_broker_utils.o
+
+# target to build an object file
+src/mqtt_broker_utils.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt_utils.dir/build.make CMakeFiles/mqtt_utils.dir/src/mqtt_broker_utils.c.o
+.PHONY : src/mqtt_broker_utils.c.o
+
+src/mqtt_broker_utils.i: src/mqtt_broker_utils.c.i
+.PHONY : src/mqtt_broker_utils.i
+
+# target to preprocess a source file
+src/mqtt_broker_utils.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt_utils.dir/build.make CMakeFiles/mqtt_utils.dir/src/mqtt_broker_utils.c.i
+.PHONY : src/mqtt_broker_utils.c.i
+
+src/mqtt_broker_utils.s: src/mqtt_broker_utils.c.s
+.PHONY : src/mqtt_broker_utils.s
+
+# target to generate assembly for a file
+src/mqtt_broker_utils.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt_utils.dir/build.make CMakeFiles/mqtt_utils.dir/src/mqtt_broker_utils.c.s
+.PHONY : src/mqtt_broker_utils.c.s
+
 src/tcp_connection.o: src/tcp_connection.c.o
 .PHONY : src/tcp_connection.o
 
@@ -236,6 +273,7 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... mqtt_broker"
+	@echo "... mqtt_utils"
 	@echo "... ptc_server"
 	@echo "... tcp_connection"
 	@echo "... src/main.o"
@@ -244,6 +282,9 @@ help:
 	@echo "... src/mqtt_broker.o"
 	@echo "... src/mqtt_broker.i"
 	@echo "... src/mqtt_broker.s"
+	@echo "... src/mqtt_broker_utils.o"
+	@echo "... src/mqtt_broker_utils.i"
+	@echo "... src/mqtt_broker_utils.s"
 	@echo "... src/tcp_connection.o"
 	@echo "... src/tcp_connection.i"
 	@echo "... src/tcp_connection.s"

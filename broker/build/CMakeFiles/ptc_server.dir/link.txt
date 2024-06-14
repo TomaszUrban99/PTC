@@ -1,1 +1,1 @@
-/usr/bin/cc CMakeFiles/ptc_server.dir/src/main.c.o -o ptc_server  libmqtt_broker.a libtcp_connection.a 
+/usr/bin/cc CMakeFiles/ptc_server.dir/src/main.c.o -o ptc_server  libmqtt_broker.a libtcp_connection.a libmqtt_utils.a 

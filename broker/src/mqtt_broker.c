@@ -1,5 +1,35 @@
 #include "mqtt_broker.h"
 
+int decode_topic_filters ( struct mqtt_broker *broker, uint8_t *message,
+                                                int index, int topic_number, int *begin ){
+
+    /* Calculate length */
+    int length = ( message[ *begin ] << 8 | message[ *begin + 1 ] );
+
+    *begin = *begin + 2;
+
+    for ( int i = 0; i < length; ++i ){
+        broker->mqtt_clients[index].topic[topic_number].topic_name[i] = message[*begin + i];
+    }
+
+    *begin = *begin + length;
+    broker->mqtt_clients[index].topic[topic_number].topic_name[length] = '\0';
+
+    printf("%s\n", broker->mqtt_clients[index].topic[topic_number].topic_name);
+
+    /* Check if packet is not malformed */
+    if ( (message[*begin] & 0x03) > 0x03 ){
+        fprintf(stderr, "decode_topic_filters(): malformed filter\n");
+        return -1;
+    }
+
+    /* Save qos */
+    broker->mqtt_clients[index].topic[topic_number].qos = (message[*begin] & 0x03);
+    *begin = *begin + 1;
+
+    return 0;
+}
+
 int find_corresponding_mqtt_client (  struct mqtt_broker *broker, struct tcp_client_info *client ){
 
     for ( int i = 0; i < 10; ++i ){
@@ -64,22 +94,106 @@ int generate_connack ( struct mqtt_broker *broker, uint8_t *message ){
 
 int interpret_connect ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t *message ){
 
-    int remaining_length = message[1] + '0';
-    printf("%s%d\n", "Rem: ", remaining_length);
+    int remaining_length = message[1];
 
     /* Read protocol level */
-    if ( message[6] != MQTT_PROTOCOL_LEVEL ){
+    if ( message[8] != MQTT_PROTOCOL_LEVEL ){
         return UNACCEPTABLE_PROTOCOL_LEVEL;
     }
 
+    /* Find index of mqtt_client */
     int index = find_corresponding_mqtt_client(broker,client);
 
+    /* Read connect flags */
+    broker->mqtt_clients[index].connect_flags = message[9];
+
+    /* ------------------- Clean session handling ------------------------------ */
+
+
+    /* ------------------------- Will Flag -------------------------------------- */
+
+    /* ------------------------- Will QoS --------------------------------------- */
+
+    if ( broker->mqtt_clients[index].connect_flags & BIT2 == 0x00 )
+        broker->mqtt_clients[index].will_qos = 0x00;
+    else {
+        broker->mqtt_clients[index].will_qos = (broker->mqtt_clients[index].connect_flags & ( BIT3 | BIT4 )) >> 3;
+    }
+
+    /* ------------------------- keep alive -------------------------------------- */
+
+    broker->mqtt_clients[index].keep_alive_msb = message[10];
+    broker->mqtt_clients[index].keep_alive_lsb = message[11];
+
+    int message_length = 12;
+
+    /* ------------------------ Client ID --------------------------------------------- */
+    decode_field_connect( broker->mqtt_clients[index].client_id, message, &message_length);
+
+
+    /* ----------------------- Save will topic ---------------------------------------- */
+    
+    if ( broker->mqtt_clients[index].connect_flags & BIT2 == BIT2 ){
+
+        decode_field_connect( broker->mqtt_clients[index].will_topic, message, &message_length );
+
+    /* -------------------- WILL MESSAGE -------------------------------------------------- */
+
+        decode_field_connect( broker->mqtt_clients[index].will_message, message, &message_length );
+    }
+
+    /* ------------------ SAVE USER NAME -------------------------------------------------- */
+
+      if ( (broker->mqtt_clients[index].connect_flags & BIT7) == BIT7 ){
+
+        decode_field_connect( broker->mqtt_clients[index].user_name, message, &message_length );
+    }
+
+    /* ----------------- SAVE PASSWORD ---------------------------------------------------- */
+
+    if ( (broker->mqtt_clients[index].connect_flags & BIT6) == BIT6 ){
+
+         decode_field_connect( broker->mqtt_clients[index].password, message, &message_length ); 
+
+    }
+
+    broker->mqtt_clients[index].is_connected = 1;
+
+    return CONNECTION_ACCEPTED;
 
 }
 
-int receive_connect ( struct mqtt_broker *broker, struct tcp_client_info *client){
+int receive_connect ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t *message ){
 
-    send_connack(broker,client, CONNECTION_ACCEPTED);
+    send_connack(broker,client, interpret_connect(broker,client,message));
+
+    return 0;
+}
+
+int receive_subscribe ( struct mqtt_broker *broker, int index, uint8_t *message){
+
+    /* Decode length */
+    uint8_t remaining_length = message[1];
+
+    /* Packet identifier */
+    int packet_identifier = ( message[2] << 8  | message[3] );
+
+    /* Message length */
+    int message_length = 4;
+
+    broker->mqtt_clients[index].number_of_topics = 0;
+
+    while ( message_length < remaining_length + 2){
+        
+        if ( decode_topic_filters(broker,message,index, 
+                    broker->mqtt_clients[index].number_of_topics,&message_length) < 0){
+            
+            fprintf(stderr,"subscribe(): malformed packet\n");
+            return -1;
+        }
+
+        broker->mqtt_clients[index].number_of_topics++;
+    }
 
     return 0;
 }
@@ -93,6 +207,21 @@ void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t 
         break;
 
         case SUBSCRIBE_CONTROL_TYPE:
+
+            int index = find_corresponding_mqtt_client(broker, client);
+
+            if ( index < 0 ){
+                fprintf(stderr, "Client not on the list of connected mqtt_clients\n");
+                return;
+            }
+
+            /* If client is on the list receive subscribe */
+            receive_subscribe(broker,index,message);
+
+            for ( int i = 0; i < broker->mqtt_clients[index].number_of_topics; ++i ){
+                printf("%s\n", broker->mqtt_clients[index].topic[i].topic_name);
+                printf("%s%d\n", "QoS: ", broker->mqtt_clients[index].topic[i].qos);
+            }
 
         break;
 

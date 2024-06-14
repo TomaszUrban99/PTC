@@ -1,4 +1,5 @@
 /home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles/tcp_connection.dir
+/home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles/mqtt_utils.dir
 /home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles/mqtt_broker.dir
 /home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles/ptc_server.dir
 /home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles/edit_cache.dir

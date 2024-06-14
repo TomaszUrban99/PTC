@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "mqtt_broker_utils.h"
 #include "mqtt_client_info.h"
 #include "tcp_connection.h"
 
@@ -93,6 +94,9 @@ struct mqtt_broker {
 #define REFUSED_ID_NOT_ALLOWED 2
 #define REFUSED_SERVER_UNAVAILABLE 3
 
+int decode_topic_filters ( struct mqtt_broker *broker, uint8_t *message,
+                                                        int index, int topic_number, int *begin );
+
 uint8_t *get_client_id ( uint8_t *message);
 
 int find_corresponding_mqtt_client ( struct mqtt_broker *broker, struct tcp_client_info *client );
@@ -105,10 +109,18 @@ int generate_connack ( struct mqtt_broker *broker, uint8_t *message );
 
 int send_connack ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t return_code );
 
-int interpret_connect ( struct mqtt_broker *broker, struct tcp_client_info *client );
+int interpret_connect ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t *message );
 
 int receive_connect ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t *message);
 
+/*!
+    \brief Receive subscribe message
+*/
+int receive_subscribe ( struct mqtt_broker *broker, int index, uint8_t *message);
+
+/*!
+    \brief Main function for providing mqtt service
+*/
 void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t *message );
 
 #endif

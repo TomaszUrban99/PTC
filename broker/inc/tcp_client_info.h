@@ -17,6 +17,8 @@
 struct tcp_client_info {
 
     int is_connected;
+    int index;
+    
     socklen_t address_length;
     struct sockaddr_storage address;
     int socket;

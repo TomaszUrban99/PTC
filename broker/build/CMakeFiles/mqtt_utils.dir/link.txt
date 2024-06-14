@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmqtt_utils.a CMakeFiles/mqtt_utils.dir/src/mqtt_broker_utils.c.o
+/usr/bin/ranlib libmqtt_utils.a

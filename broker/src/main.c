@@ -72,7 +72,7 @@ int main ( int argc, char **argv ){
                     
                     if ( received_bytes  < 1 ){ 
                         
-                        /*client->is_connected = 0;*/
+                        client->is_connected = 0;
                         FD_CLR(i, &master);
                         close(i);
 
@@ -88,68 +88,3 @@ int main ( int argc, char **argv ){
 
     return 0;
 }
-
-    /*while(1) {*/
-        
-        /*fd_set reads;
-        reads = wait_on_clients(&broker.listen_socket,broker.clients);
-
-        if ( FD_ISSET(broker.listen_socket,&reads) ){
-            
-            struct tcp_client_info *client = get_client(-1,broker.clients);
-            
-            client->socket = accept( broker.listen_socket, 
-                (struct sockaddr*) &(client->address), &(client->address_length));
-
-            if ( client->socket < 0 ){
-                fprintf(stderr, "accept(): failed \n");
-                return 1;
-            }
-
-            printf("New connection from %s. \n",
-            get_client_address(client));
-        }
-
-        struct tcp_client_info *client = broker.clients;
-
-        while(client){
-
-            struct tcp_client_info *next = client->next;
-
-            if ( FD_ISSET(client->socket, &reads)){
-
-
-                int bytes_received = recv(client->socket,
-                    client->request, MAX_REQUEST_SIZE, 0 );
-
-                printf("%s%d\n", "Bytes received: ", bytes_received);
-
-                     for ( int i = 0; i < bytes_received; ++i ){
-                        printf("%02x", client->request[i]);
-                }
-            
-                if ( bytes_received < 1 ){
-                    printf("Unexpected disconnect from %s. \n", get_client_address(client));
-                    drop_client(client, broker.clients);
-                }
-                else{
-
-                    for ( int i = 0; i < bytes_received; ++i ){
-                        printf("%02x", client->request[i]);
-                    }
-                    /* Prepare response */
-                    /*mqtt(&broker,client);
-                    client->received += bytes_received;
-                }
-            }
-
-            client = next;
-        }
-    }
-
-    printf("Closing listening socket...\n");
-    close(broker.listen_socket);
-
-        printf("Finished.\n");
-    return 0;
-}*/

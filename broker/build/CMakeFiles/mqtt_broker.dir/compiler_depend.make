@@ -37,6 +37,7 @@ CMakeFiles/mqtt_broker.dir/src/mqtt_broker.c.o: /home/tomasz/Documents/Studia/PT
   /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
   /usr/include/strings.h \
+  /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/mqtt_broker_utils.h \
   /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/mqtt_client_info.h \
   /usr/include/x86_64-linux-gnu/sys/types.h \
   /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
@@ -96,6 +97,7 @@ CMakeFiles/mqtt_broker.dir/src/mqtt_broker.c.o: /home/tomasz/Documents/Studia/PT
   /usr/include/x86_64-linux-gnu/asm/errno.h \
   /usr/include/asm-generic/errno.h \
   /usr/include/asm-generic/errno-base.h \
+  /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/topic.hh \
   /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/tcp_client_info.h \
   /usr/include/stdlib.h \
   /usr/include/x86_64-linux-gnu/bits/waitflags.h \
@@ -167,6 +169,8 @@ CMakeFiles/mqtt_broker.dir/src/mqtt_broker.c.o: /home/tomasz/Documents/Studia/PT
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h:
 
+/usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
+
 /usr/include/x86_64-linux-gnu/bits/floatn.h:
 
 /usr/include/asm-generic/bitsperlong.h:
@@ -174,6 +178,8 @@ CMakeFiles/mqtt_broker.dir/src/mqtt_broker.c.o: /home/tomasz/Documents/Studia/PT
 /usr/include/x86_64-linux-gnu/gnu/stubs.h:
 
 /usr/include/features.h:
+
+/home/tomasz/Documents/Studia/PTC/projekt/broker/inc/topic.hh:
 
 /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
 
@@ -261,6 +267,8 @@ CMakeFiles/mqtt_broker.dir/src/mqtt_broker.c.o: /home/tomasz/Documents/Studia/PT
 
 /usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
 
+/home/tomasz/Documents/Studia/PTC/projekt/broker/inc/mqtt_broker_utils.h:
+
 /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:
 
 /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/mqtt_client_info.h:
@@ -306,5 +314,3 @@ CMakeFiles/mqtt_broker.dir/src/mqtt_broker.c.o: /home/tomasz/Documents/Studia/PT
 /usr/include/x86_64-linux-gnu/bits/types/time_t.h:
 
 /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h:
-
-/usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
