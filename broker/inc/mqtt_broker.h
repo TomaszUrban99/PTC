@@ -68,6 +68,7 @@
 #define LEVEL_QOS_0 0
 #define LEVEL_QOS_1 1
 #define LEVEL_QOS_2 2
+#define FAILURE 0x80
 
 #define UNACCEPTABLE_PROTOCOL_LEVEL 0x01
 
@@ -117,6 +118,11 @@ int receive_connect ( struct mqtt_broker *broker, struct tcp_client_info *client
     \brief Receive subscribe message
 */
 int receive_subscribe ( struct mqtt_broker *broker, int index, uint8_t *message);
+
+/*!
+    \brief Send suback message
+*/
+int send_suback ( struct mqtt_broker *broker, int index );
 
 /*!
     \brief Main function for providing mqtt service

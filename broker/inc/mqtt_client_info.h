@@ -28,14 +28,16 @@ struct mqtt_client_info {
 
        /*char *ip_address; /* IP address */
        /*char *port_number; /* Port number */
+
+      int packet_identifier;
    
-        int tcp_socket;
-        char client_id[MQTT_CLIENT_ID_LENGTH];
+      int tcp_socket;
+      char client_id[MQTT_CLIENT_ID_LENGTH];
    
-        uint8_t will_topic[MQTT_WILL_TOPIC];
-        uint8_t will_message[MQTT_WILL_MESSAGE];
+      uint8_t will_topic[MQTT_WILL_TOPIC];
+      uint8_t will_message[MQTT_WILL_MESSAGE];
         
-        int will_qos;
+      int will_qos;
 
       int number_of_topics;
 

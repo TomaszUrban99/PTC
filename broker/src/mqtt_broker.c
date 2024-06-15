@@ -15,16 +15,20 @@ int decode_topic_filters ( struct mqtt_broker *broker, uint8_t *message,
     *begin = *begin + length;
     broker->mqtt_clients[index].topic[topic_number].topic_name[length] = '\0';
 
-    printf("%s\n", broker->mqtt_clients[index].topic[topic_number].topic_name);
+    broker->mqtt_clients[index].number_of_topics++;
+
 
     /* Check if packet is not malformed */
     if ( (message[*begin] & 0x03) > 0x03 ){
+        
         fprintf(stderr, "decode_topic_filters(): malformed filter\n");
-        return -1;
+        /* Save qos */
+        broker->mqtt_clients[index].topic[topic_number].qos = FAILURE;
+    } else {
+        /* Save qos */
+        broker->mqtt_clients[index].topic[topic_number].qos = (message[*begin] & 0x03);
     }
 
-    /* Save qos */
-    broker->mqtt_clients[index].topic[topic_number].qos = (message[*begin] & 0x03);
     *begin = *begin + 1;
 
     return 0;
@@ -176,7 +180,7 @@ int receive_subscribe ( struct mqtt_broker *broker, int index, uint8_t *message)
     uint8_t remaining_length = message[1];
 
     /* Packet identifier */
-    int packet_identifier = ( message[2] << 8  | message[3] );
+    broker->mqtt_clients[index].packet_identifier = ( message[2] << 8  | message[3] );
 
     /* Message length */
     int message_length = 4;
@@ -185,14 +189,33 @@ int receive_subscribe ( struct mqtt_broker *broker, int index, uint8_t *message)
 
     while ( message_length < remaining_length + 2){
         
-        if ( decode_topic_filters(broker,message,index, 
-                    broker->mqtt_clients[index].number_of_topics,&message_length) < 0){
-            
-            fprintf(stderr,"subscribe(): malformed packet\n");
-            return -1;
-        }
+        decode_topic_filters(broker,message,index, 
+                    broker->mqtt_clients[index].number_of_topics,&message_length);
+    }
 
-        broker->mqtt_clients[index].number_of_topics++;
+    return 0;
+}
+
+int send_suback ( struct mqtt_broker *broker, int index ){
+
+    uint8_t suback_message[SUBACK_MESSAGE_LENGTH];
+
+    suback_message[0] = SUBACK_CONTROL_TYPE;
+    suback_message[1] = 4 + broker->mqtt_clients[index].number_of_topics - 2;
+
+    /* Packet indentifier MSB */
+    suback_message[2] = ( broker->mqtt_clients[index].packet_identifier >> 8 ) & 0xFF;
+    /* Packet identifier LSB */
+    suback_message[3] = broker->mqtt_clients[index].packet_identifier & 0xFF;
+
+    /* Write QoS */
+    for ( int i = 0; i < broker->mqtt_clients[index].number_of_topics; ++i ){
+        suback_message[4 + i] = broker->mqtt_clients[index].topic[i].qos;
+    }
+
+    if ( send(broker->clients[index].socket,(char*) &suback_message, suback_message[1] + 2, 0) < 0 ){
+        fprintf(stderr, "receive_suback(): failed to send message\n" );
+        return -1;
     }
 
     return 0;
@@ -218,9 +241,9 @@ void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t 
             /* If client is on the list receive subscribe */
             receive_subscribe(broker,index,message);
 
-            for ( int i = 0; i < broker->mqtt_clients[index].number_of_topics; ++i ){
-                printf("%s\n", broker->mqtt_clients[index].topic[i].topic_name);
-                printf("%s%d\n", "QoS: ", broker->mqtt_clients[index].topic[i].qos);
+            if ( send_suback(broker,index) < 0 ){
+                fprintf(stderr,"Failed to send suback()\n");
+                return;
             }
 
         break;
