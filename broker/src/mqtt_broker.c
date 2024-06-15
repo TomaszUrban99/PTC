@@ -1,5 +1,48 @@
 #include "mqtt_broker.h"
 
+void add_subscriber ( struct subscription *subs, 
+        int index, int qos, int packet_identifier ){
+
+            struct subscriber *new_sub = subs->client;
+
+            while ( new_sub ){
+                new_sub = new_sub->next;
+            }
+
+            /* Allocate new subscriber */
+            new_sub = (struct subscriber *) calloc ( 0, sizeof ( struct subscriber ));
+
+            new_sub->index = index;
+            new_sub->qos = qos;
+            new_sub->packet_identifier = packet_identifier;
+            new_sub->next = NULL;
+}
+
+void delete_subscriber ( struct mqtt_broker *broker ){
+
+    struct subscription *sub = broker->subs;
+
+    while ( sub ){
+
+        struct subscriber *sub_client = sub->client;
+        
+        while ( sub_client ){
+            
+            struct subscriber *n;
+            n = sub_client;
+            
+            sub_client = n->next;
+
+            free(n);
+        }
+
+        struct subscription *k = sub;
+        sub = k->next;
+
+        free(k);
+    }
+}
+
 int decode_topic_filters ( struct mqtt_broker *broker, uint8_t *message,
                                                 int index, int topic_number, int *begin ){
 
@@ -27,6 +70,7 @@ int decode_topic_filters ( struct mqtt_broker *broker, uint8_t *message,
     } else {
         /* Save qos */
         broker->mqtt_clients[index].topic[topic_number].qos = (message[*begin] & 0x03);
+        broker->mqtt_clients[index].topic[topic_number].is_subscribed = 1;
     }
 
     *begin = *begin + 1;
@@ -221,6 +265,35 @@ int send_suback ( struct mqtt_broker *broker, int index ){
     return 0;
 }
 
+int receive_publish ( struct mqtt_broker *broker, int index, uint8_t *message ){
+
+    /* Save remaining message length */
+    int remaining_length = message[1];
+
+    /* ----------------- DUP flag --------------------------------------- */
+
+    /* ------------------ QoS level ------------------------------------- */
+
+    /* ------------------ Will Retain ----------------------------------- */
+
+    /* Read length of topic */
+    int topic_length = ( message[2] << 8 | message[3] );
+
+    uint8_t topic_to_publish[128];
+
+    /* Read topic */
+    for ( int i = 0; i < topic_length; ++i){
+        topic_to_publish[i] = message[4 + i];
+    }
+
+    struct subscription_clients cli = find_subscription_client(broker->mqtt_clients, 10, topic_to_publish);
+
+    for ( int i = 0; i < cli.number_of_clients; ++i ){
+        printf("%d\n",i);
+        send(broker->clients[i].socket,topic_to_publish,remaining_length+2,0);
+    }
+}
+
 void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t *message ){
 
         switch ( message[0] ){
@@ -250,6 +323,7 @@ void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t 
 
         case PUBLISH_CONTROL_TYPE:
 
+            receive_publish(broker,index,message);
         break;
 
         case PINGEQ_CONTROL_TYPE:

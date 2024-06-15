@@ -88,4 +88,6 @@ CMakeFiles/mqtt_broker.dir/src/mqtt_broker.c.o: \
  /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
- /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/tcp_connection.h
+ /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/tcp_connection.h \
+ /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/subscription.h \
+ /home/tomasz/Documents/Studia/PTC/projekt/broker/inc/subscriber.h

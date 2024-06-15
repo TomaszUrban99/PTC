@@ -8,6 +8,7 @@
 #include "mqtt_broker_utils.h"
 #include "mqtt_client_info.h"
 #include "tcp_connection.h"
+#include "subscription.h"
 
 /* Bits */
 #define BIT0 0b00000001
@@ -88,12 +89,22 @@ struct mqtt_broker {
     /* Pointer to the first connected client */
     struct mqtt_client_info mqtt_clients[10];
 
+    /* Pointer to subscription */
+    struct subscription *subs;
+
 };
 
 #define CONNECTION_ACCEPTED 0
 #define REFUSED_PROTOCOL_VERSION 1
 #define REFUSED_ID_NOT_ALLOWED 2
 #define REFUSED_SERVER_UNAVAILABLE 3
+
+void add_subscriber ( struct subscription *subs, int index, int qos, int packet_identifier );
+
+void delete_subscriber ( struct mqtt_broker *broker );
+
+/* Add new subscription */
+void add_subscription ( struct mqtt_broker *broker, uint8_t *topic, struct subscriber *sub_client);
 
 int decode_topic_filters ( struct mqtt_broker *broker, uint8_t *message,
                                                         int index, int topic_number, int *begin );
@@ -123,6 +134,16 @@ int receive_subscribe ( struct mqtt_broker *broker, int index, uint8_t *message)
     \brief Send suback message
 */
 int send_suback ( struct mqtt_broker *broker, int index );
+
+/*!
+    \brief Publish message to clients
+*/
+int publish_to_clients ( struct mqtt_broker *broker, uint8_t *topic_to_publish );
+
+/*!
+    \brief Receive publish message
+*/
+int receive_publish ( struct mqtt_broker *broker, int index, uint8_t *message );
 
 /*!
     \brief Main function for providing mqtt service
