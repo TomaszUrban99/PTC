@@ -1,0 +1,2 @@
+/usr/bin/ar qc libsubscription.a CMakeFiles/subscription.dir/src/subscription.c.o
+/usr/bin/ranlib libsubscription.a

@@ -1,50 +1,9 @@
 #include "mqtt_broker.h"
 
-void add_subscriber ( struct subscription *subs, 
-        int index, int qos, int packet_identifier ){
-
-            struct subscriber *new_sub = subs->client;
-
-            while ( new_sub ){
-                new_sub = new_sub->next;
-            }
-
-            /* Allocate new subscriber */
-            new_sub = (struct subscriber *) calloc ( 0, sizeof ( struct subscriber ));
-
-            new_sub->index = index;
-            new_sub->qos = qos;
-            new_sub->packet_identifier = packet_identifier;
-            new_sub->next = NULL;
-}
-
-void delete_subscriber ( struct mqtt_broker *broker ){
-
-    struct subscription *sub = broker->subs;
-
-    while ( sub ){
-
-        struct subscriber *sub_client = sub->client;
-        
-        while ( sub_client ){
-            
-            struct subscriber *n;
-            n = sub_client;
-            
-            sub_client = n->next;
-
-            free(n);
-        }
-
-        struct subscription *k = sub;
-        sub = k->next;
-
-        free(k);
-    }
-}
-
 int decode_topic_filters ( struct mqtt_broker *broker, uint8_t *message,
-                                                int index, int topic_number, int *begin ){
+                                                int index, int packet_identifier, int *begin ){
+
+    uint8_t topic[MAX_TOPIC_LENGTH];
 
     /* Calculate length */
     int length = ( message[ *begin ] << 8 | message[ *begin + 1 ] );
@@ -52,25 +11,17 @@ int decode_topic_filters ( struct mqtt_broker *broker, uint8_t *message,
     *begin = *begin + 2;
 
     for ( int i = 0; i < length; ++i ){
-        broker->mqtt_clients[index].topic[topic_number].topic_name[i] = message[*begin + i];
+        topic[i] = message[*begin + i];
     }
 
     *begin = *begin + length;
-    broker->mqtt_clients[index].topic[topic_number].topic_name[length] = '\0';
-
-    broker->mqtt_clients[index].number_of_topics++;
-
+    topic[length] = '\0';
 
     /* Check if packet is not malformed */
     if ( (message[*begin] & 0x03) > 0x03 ){
-        
         fprintf(stderr, "decode_topic_filters(): malformed filter\n");
-        /* Save qos */
-        broker->mqtt_clients[index].topic[topic_number].qos = FAILURE;
     } else {
-        /* Save qos */
-        broker->mqtt_clients[index].topic[topic_number].qos = (message[*begin] & 0x03);
-        broker->mqtt_clients[index].topic[topic_number].is_subscribed = 1;
+        add_subscription(&broker->subs, topic, index, (message[*begin] & 0x03), packet_identifier);
     }
 
     *begin = *begin + 1;
@@ -224,7 +175,7 @@ int receive_subscribe ( struct mqtt_broker *broker, int index, uint8_t *message)
     uint8_t remaining_length = message[1];
 
     /* Packet identifier */
-    broker->mqtt_clients[index].packet_identifier = ( message[2] << 8  | message[3] );
+    int packet_identifier = ( message[2] << 8  | message[3] );
 
     /* Message length */
     int message_length = 4;
@@ -232,9 +183,13 @@ int receive_subscribe ( struct mqtt_broker *broker, int index, uint8_t *message)
     broker->mqtt_clients[index].number_of_topics = 0;
 
     while ( message_length < remaining_length + 2){
-        
-        decode_topic_filters(broker,message,index, 
-                    broker->mqtt_clients[index].number_of_topics,&message_length);
+
+        /* Topic */
+        uint8_t topic[MAX_TOPIC_LENGTH];
+
+        decode_topic_filters(broker, message,index, 
+                    packet_identifier ,&message_length);
+
     }
 
     return 0;
@@ -265,6 +220,34 @@ int send_suback ( struct mqtt_broker *broker, int index ){
     return 0;
 }
 
+int publish_to_clients ( struct mqtt_broker *broker, uint8_t *topic_to_publish, uint8_t *message_to_publish  ){
+
+    /* Search through list of subscribed topics */
+
+    /* Temporary pointer for iterating thorugh list */
+    struct subscription *temp = broker->subs;
+
+
+    printf("%s\n", "Topics: ");
+    print_subscriptions(broker->subs);
+
+    while ( temp ){
+
+        if ( strcmp(temp->topic, topic_to_publish) == 0 ){
+            struct subscriber *sub_client = temp->client;
+
+            while ( sub_client ){
+                send ( broker->clients[sub_client->index].socket, (char*) &message_to_publish, message_to_publish[1] + 2, 0);
+                sub_client = sub_client->next;
+            }
+        }
+
+        temp = temp->next;
+    }
+
+    return 0;
+}
+
 int receive_publish ( struct mqtt_broker *broker, int index, uint8_t *message ){
 
     /* Save remaining message length */
@@ -286,12 +269,8 @@ int receive_publish ( struct mqtt_broker *broker, int index, uint8_t *message ){
         topic_to_publish[i] = message[4 + i];
     }
 
-    struct subscription_clients cli = find_subscription_client(broker->mqtt_clients, 10, topic_to_publish);
+    publish_to_clients(broker,topic_to_publish, );
 
-    for ( int i = 0; i < cli.number_of_clients; ++i ){
-        printf("%d\n",i);
-        send(broker->clients[i].socket,topic_to_publish,remaining_length+2,0);
-    }
 }
 
 void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t *message ){
@@ -314,6 +293,8 @@ void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t 
             /* If client is on the list receive subscribe */
             receive_subscribe(broker,index,message);
 
+            print_subscriptions(broker->subs);
+
             if ( send_suback(broker,index) < 0 ){
                 fprintf(stderr,"Failed to send suback()\n");
                 return;
@@ -324,6 +305,7 @@ void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t 
         case PUBLISH_CONTROL_TYPE:
 
             receive_publish(broker,index,message);
+
         break;
 
         case PINGEQ_CONTROL_TYPE:

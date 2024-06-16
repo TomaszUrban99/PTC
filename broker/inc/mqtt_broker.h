@@ -99,15 +99,9 @@ struct mqtt_broker {
 #define REFUSED_ID_NOT_ALLOWED 2
 #define REFUSED_SERVER_UNAVAILABLE 3
 
-void add_subscriber ( struct subscription *subs, int index, int qos, int packet_identifier );
-
-void delete_subscriber ( struct mqtt_broker *broker );
-
-/* Add new subscription */
-void add_subscription ( struct mqtt_broker *broker, uint8_t *topic, struct subscriber *sub_client);
 
 int decode_topic_filters ( struct mqtt_broker *broker, uint8_t *message,
-                                                        int index, int topic_number, int *begin );
+                                                        int index, int packet_identifier, int *begin );
 
 uint8_t *get_client_id ( uint8_t *message);
 
@@ -138,7 +132,7 @@ int send_suback ( struct mqtt_broker *broker, int index );
 /*!
     \brief Publish message to clients
 */
-int publish_to_clients ( struct mqtt_broker *broker, uint8_t *topic_to_publish );
+int publish_to_clients ( struct mqtt_broker *broker, uint8_t *topic_to_publish, uint8_t *message_to_publish );
 
 /*!
     \brief Receive publish message

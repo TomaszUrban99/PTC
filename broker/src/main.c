@@ -24,7 +24,7 @@ int main ( int argc, char **argv ){
     broker.ip_address = "127.0.0.1";
     broker.connected_clients_number = 0;
     broker.subs = NULL;
-    
+
     /* Create listening socket */
     create_socket(broker.ip_address, &broker.listen_socket, broker.port);
 
@@ -56,9 +56,10 @@ int main ( int argc, char **argv ){
         if(FD_ISSET(0, &reads)) {
             
             char input[2];
+            printf("Collere\n");
             if (!fgets(input, 2, stdin)) break;
 
-            delete_subscriber(&broker);
+            delete_subscriptions(&broker.subs);
 
             return 0;
         }

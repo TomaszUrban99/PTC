@@ -64,6 +64,7 @@ CMAKE_BINARY_DIR = /home/tomasz/Documents/Studia/PTC/projekt/broker/build
 
 # The main recursive "all" target.
 all: CMakeFiles/tcp_connection.dir/all
+all: CMakeFiles/subscription.dir/all
 all: CMakeFiles/mqtt_utils.dir/all
 all: CMakeFiles/mqtt_broker.dir/all
 all: CMakeFiles/ptc_server.dir/all
@@ -75,6 +76,7 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/tcp_connection.dir/clean
+clean: CMakeFiles/subscription.dir/clean
 clean: CMakeFiles/mqtt_utils.dir/clean
 clean: CMakeFiles/mqtt_broker.dir/clean
 clean: CMakeFiles/ptc_server.dir/clean
@@ -87,7 +89,7 @@ clean: CMakeFiles/ptc_server.dir/clean
 CMakeFiles/tcp_connection.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tcp_connection.dir/build.make CMakeFiles/tcp_connection.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tcp_connection.dir/build.make CMakeFiles/tcp_connection.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles --progress-num=7,8 "Built target tcp_connection"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles --progress-num=9,10 "Built target tcp_connection"
 .PHONY : CMakeFiles/tcp_connection.dir/all
 
 # Build rule for subdir invocation for target.
@@ -105,6 +107,32 @@ tcp_connection: CMakeFiles/tcp_connection.dir/rule
 CMakeFiles/tcp_connection.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tcp_connection.dir/build.make CMakeFiles/tcp_connection.dir/clean
 .PHONY : CMakeFiles/tcp_connection.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/subscription.dir
+
+# All Build rule for target.
+CMakeFiles/subscription.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/subscription.dir/build.make CMakeFiles/subscription.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/subscription.dir/build.make CMakeFiles/subscription.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles --progress-num=7,8 "Built target subscription"
+.PHONY : CMakeFiles/subscription.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/subscription.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/subscription.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles 0
+.PHONY : CMakeFiles/subscription.dir/rule
+
+# Convenience name for target.
+subscription: CMakeFiles/subscription.dir/rule
+.PHONY : subscription
+
+# clean rule for target.
+CMakeFiles/subscription.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/subscription.dir/build.make CMakeFiles/subscription.dir/clean
+.PHONY : CMakeFiles/subscription.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/mqtt_utils.dir
@@ -136,6 +164,7 @@ CMakeFiles/mqtt_utils.dir/clean:
 # Target rules for target CMakeFiles/mqtt_broker.dir
 
 # All Build rule for target.
+CMakeFiles/mqtt_broker.dir/all: CMakeFiles/subscription.dir/all
 CMakeFiles/mqtt_broker.dir/all: CMakeFiles/mqtt_utils.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt_broker.dir/build.make CMakeFiles/mqtt_broker.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt_broker.dir/build.make CMakeFiles/mqtt_broker.dir/build
@@ -144,7 +173,7 @@ CMakeFiles/mqtt_broker.dir/all: CMakeFiles/mqtt_utils.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/mqtt_broker.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles 6
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/mqtt_broker.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles 0
 .PHONY : CMakeFiles/mqtt_broker.dir/rule
@@ -163,6 +192,7 @@ CMakeFiles/mqtt_broker.dir/clean:
 
 # All Build rule for target.
 CMakeFiles/ptc_server.dir/all: CMakeFiles/tcp_connection.dir/all
+CMakeFiles/ptc_server.dir/all: CMakeFiles/subscription.dir/all
 CMakeFiles/ptc_server.dir/all: CMakeFiles/mqtt_utils.dir/all
 CMakeFiles/ptc_server.dir/all: CMakeFiles/mqtt_broker.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ptc_server.dir/build.make CMakeFiles/ptc_server.dir/depend
@@ -172,7 +202,7 @@ CMakeFiles/ptc_server.dir/all: CMakeFiles/mqtt_broker.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/ptc_server.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles 8
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles 10
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/ptc_server.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/tomasz/Documents/Studia/PTC/projekt/broker/build/CMakeFiles 0
 .PHONY : CMakeFiles/ptc_server.dir/rule

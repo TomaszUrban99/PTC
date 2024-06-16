@@ -130,6 +130,19 @@ tcp_connection/fast:
 .PHONY : tcp_connection/fast
 
 #=============================================================================
+# Target rules for targets named subscription
+
+# Build rule for target.
+subscription: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 subscription
+.PHONY : subscription
+
+# fast build rule for target.
+subscription/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/subscription.dir/build.make CMakeFiles/subscription.dir/build
+.PHONY : subscription/fast
+
+#=============================================================================
 # Target rules for targets named mqtt_utils
 
 # Build rule for target.
@@ -240,6 +253,30 @@ src/mqtt_broker_utils.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mqtt_utils.dir/build.make CMakeFiles/mqtt_utils.dir/src/mqtt_broker_utils.c.s
 .PHONY : src/mqtt_broker_utils.c.s
 
+src/subscription.o: src/subscription.c.o
+.PHONY : src/subscription.o
+
+# target to build an object file
+src/subscription.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/subscription.dir/build.make CMakeFiles/subscription.dir/src/subscription.c.o
+.PHONY : src/subscription.c.o
+
+src/subscription.i: src/subscription.c.i
+.PHONY : src/subscription.i
+
+# target to preprocess a source file
+src/subscription.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/subscription.dir/build.make CMakeFiles/subscription.dir/src/subscription.c.i
+.PHONY : src/subscription.c.i
+
+src/subscription.s: src/subscription.c.s
+.PHONY : src/subscription.s
+
+# target to generate assembly for a file
+src/subscription.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/subscription.dir/build.make CMakeFiles/subscription.dir/src/subscription.c.s
+.PHONY : src/subscription.c.s
+
 src/tcp_connection.o: src/tcp_connection.c.o
 .PHONY : src/tcp_connection.o
 
@@ -275,6 +312,7 @@ help:
 	@echo "... mqtt_broker"
 	@echo "... mqtt_utils"
 	@echo "... ptc_server"
+	@echo "... subscription"
 	@echo "... tcp_connection"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
@@ -285,6 +323,9 @@ help:
 	@echo "... src/mqtt_broker_utils.o"
 	@echo "... src/mqtt_broker_utils.i"
 	@echo "... src/mqtt_broker_utils.s"
+	@echo "... src/subscription.o"
+	@echo "... src/subscription.i"
+	@echo "... src/subscription.s"
 	@echo "... src/tcp_connection.o"
 	@echo "... src/tcp_connection.i"
 	@echo "... src/tcp_connection.s"
