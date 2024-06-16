@@ -1,0 +1,22 @@
+[
+{
+  "directory": "/home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/build",
+  "command": "/usr/bin/cc -I/home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/inc -g -o CMakeFiles/tcp_connection.dir/src/tcp_connection.c.o -c /home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/src/tcp_connection.c",
+  "file": "/home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/src/tcp_connection.c"
+},
+{
+  "directory": "/home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/build",
+  "command": "/usr/bin/cc -I/home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/inc -g -o CMakeFiles/mqttutils.dir/src/mqtt_utils.c.o -c /home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/src/mqtt_utils.c",
+  "file": "/home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/src/mqtt_utils.c"
+},
+{
+  "directory": "/home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/build",
+  "command": "/usr/bin/cc -I/home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/inc -g -o CMakeFiles/mqtt_client.dir/src/mqtt_client.c.o -c /home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/src/mqtt_client.c",
+  "file": "/home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/src/mqtt_client.c"
+},
+{
+  "directory": "/home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/build",
+  "command": "/usr/bin/cc -I/home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/inc -g -o CMakeFiles/ptc.dir/src/main.c.o -c /home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/src/main.c",
+  "file": "/home/tomasz/Documents/Studia/PTC/projekt/klient_subscribe/src/main.c"
+}
+]

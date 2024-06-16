@@ -164,6 +164,8 @@ int generate_publish_message (  struct mqtt_client *client,
 */
 int publish ( struct mqtt_client *client, struct publish *pub_info );
 
+int receive_publish ( struct mqtt_client *client );
+
 /*!
     \brief Check correctness of puback message and information contained inside
 */

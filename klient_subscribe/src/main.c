@@ -69,8 +69,9 @@ int main ( int argc, char **argv ){
     uint8_t subscribe_message[256];
 
     subscribe(&client,&ss);
+    receive_suback(&client,&ss);
 
-    if(receive_suback(&client,&ss) >= 0 ){
+    if(/*receive_suback(&client,&ss) >= 0*/ 1 ){
 
 
         while(1) {
@@ -78,35 +79,51 @@ int main ( int argc, char **argv ){
             fd_set reads;
             FD_ZERO(&reads);
             FD_SET(client.tcp_socket, &reads);
+            FD_SET(0,&reads);
 
             if (select( client.tcp_socket+1, &reads, 0, 0, 0) < 0) {    
                 fprintf(stderr, "select() failed");
                 return 1;
             }
 
-            printf("%d\n", 1);
-
             if (FD_ISSET(client.tcp_socket, &reads)) {
-                
-                char read[4096];
-                int bytes_received = recv(client.tcp_socket, read, 4096, 0);
-                
-                if (bytes_received < 1) {
-                    printf("Connection closed by peer.\n");
-                    break;
-                }
-                
-                printf("Received (%d bytes): %.*s",
-                    bytes_received, bytes_received, read);
+                receive_publish(&client);
+            }
 
-                for ( int i = 0; i < bytes_received; ++ i){
-                    printf("%02x", read[i]);
+            if ( FD_ISSET(0, &reads)){
+
+                char input[2];
+
+                if(!fgets(input,2,stdin)) break;
+
+                switch (input[0])
+                {
+                case 'u':
+                    unsubscribe(&client,&ss,1);
+                    receive_unsuback(&client,&ss,1);
+                    break;
+                case 'p':
+                    pingreq(&client);
+                    receive_pingresponse(&client);
+                    break;
+                case 'q':
+
+                    for ( int i = 0; i < ss.topic_numbers; ++i ){
+                        unsubscribe(&client,&ss,i);
+                        receive_unsuback(&client,&ss,i);
+                    }
+
+                    send_disconnect(&client);
+                    disconnect(&client);
+
+                    return 0;
                 }
+
 
             }
 
-            pingreq(&client);
-            receive_pingresponse(&client);
+            /*pingreq(&client);
+            receive_pingresponse(&client);*/
         }
     }
 

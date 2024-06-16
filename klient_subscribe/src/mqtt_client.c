@@ -150,6 +150,42 @@ int publish ( struct mqtt_client *client, struct publish *pub_info ) {
 
 }
 
+int receive_publish ( struct mqtt_client *client ){
+
+    uint8_t publish_message[256];
+
+    /* Bytes received */
+        int bytes_received = 0;
+        bytes_received = recv(client->tcp_socket, publish_message, 256, 0);
+
+    if (bytes_received < 1) {
+        printf("Connection closed by peer.\n");
+        return -1;
+    }
+
+    int remaining_length = publish_message[1];
+
+    /* If Qos == 0, there is no packet identifier */
+
+    if ( (publish_message[0] & 0x06) == 0x00 ){
+
+        /* Read topic length */
+        int length = ( publish_message[2] << 8 | publish_message[3] );
+
+        /* Topic (Topic length) + Topic length (2) */
+        printf("%s\n", "Published message: ");
+
+        for ( int i = 0; i < remaining_length - length - 2; ++i ){
+            printf("%c", publish_message[ 2 + length + 2 + i]);
+        }
+
+        printf("\n");
+        
+    }
+
+    return 0;
+}
+
 int interpret_puback ( struct publish *pub_info, uint8_t *puback_message ){
 
     if ( puback_message[0] != PUBACK_CONTROL_TYPE ){
