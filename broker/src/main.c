@@ -56,7 +56,6 @@ int main ( int argc, char **argv ){
         if(FD_ISSET(0, &reads)) {
             
             char input[2];
-            printf("Collere\n");
             if (!fgets(input, 2, stdin)) break;
 
             delete_subscriptions(&broker.subs);
@@ -82,14 +81,14 @@ int main ( int argc, char **argv ){
 
                     int received_bytes = recv(client->socket, buffer_message, MAX_MESSAGE_LENGTH,0);
                     
-                    /*if ( received_bytes  < 1 ){ 
+                    if ( received_bytes  < 1 ){ 
                         
                         client->is_connected = 0;
                         FD_CLR(i, &master);
                         close(i);
 
                         continue;
-                    }*/
+                    }
                    
                     mqtt(&broker, client, buffer_message);
                 
