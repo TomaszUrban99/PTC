@@ -57,6 +57,53 @@ void add_subscription ( struct subscription **sub, uint8_t *topic, int index, in
 
 }
 
+void delete_subscription ( struct subscription **sub, uint8_t *topic, int index, int packet_identifier ){
+
+    struct subscription *sub_client = (*sub)->client;
+
+    if ( strcmp(sub_client->topic, topic) == 0){
+        
+        struct subscriber *cl = sub_client->client;
+
+        if ( cl->index == index && cl->packet_identifier == packet_identifier ){
+            sub_client->client = cl->next;
+            free(cl);
+            return;
+        }
+
+        while(cl->next != NULL){
+            
+            if ( cl->next->index == index && cl->next->packet_identifier == packet_identifier){
+
+                struct subscriber *dl = cl->next;
+                cl->next = cl->next->next;
+                free(dl);
+                return; 
+            }
+
+            cl = cl->next;
+        }
+
+
+    }
+
+    while (sub_client->next != NULL ){
+
+        if ( strcmp(sub_client->next->topic, topic) == 0){
+
+            struct subscriber *cl = sub_client->next->client;
+
+            while(cl){
+
+            }
+        }
+
+        sub_client = sub_client->next;
+    }
+    
+
+}
+
 void delete_subscribers ( struct subscription **subs ){
 
     struct subscriber *sub_client = (*subs)->client;

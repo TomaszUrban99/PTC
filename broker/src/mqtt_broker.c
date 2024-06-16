@@ -277,6 +277,42 @@ int receive_publish ( struct mqtt_broker *broker, int index, uint8_t *message ){
 
 }
 
+int send_pingresponse ( struct mqtt_broker *broker, struct tcp_client *client ){
+
+    uint8_t pingresponse[PINGRESP_MESSAGE_LENGTH];
+
+    pingresponse[0] = PINGRESP_CONTROL_TYPE;
+    pingresponse[1] = 0;
+
+    int total_bytes = send(client->socket,pingresponse,PINGRESP_MESSAGE_LENGTH,0);
+
+    if ( total_bytes < PINGRESP_MESSAGE_LENGTH ){
+        fprintf("send_pingresp(): failed to send");
+        return -1;
+    }
+
+    return total_bytes;
+}
+
+int receive_pingrequest ( struct mqtt_broker *broker,  struct tcp_client *client, uint8_t *message ){
+
+    if ( send_pingresponse ( broker, client ) < 0){
+        return -1;
+    }
+
+    return 0;
+
+}
+
+int receive_unsubscribe ( struct mqtt_broker *broker, int index, uint8_t *message ){
+
+    int remaining_length = message[1];
+
+    int packet_identifier = ( message[2] << 8 | message[3]);
+
+
+}
+
 void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t *message ){
 
         switch ( message[0] ){
@@ -316,7 +352,16 @@ void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t 
 
         break;
 
+        case UNSUBSCRIBE_CONTROL_TYPE:
+
+
+
+        
+        break;
+
         case PINGEQ_CONTROL_TYPE:
+
+            receive_pingrequest(broker,client,message);
 
         break;
 
