@@ -338,12 +338,7 @@ int receive_unsubscribe ( struct mqtt_broker *broker, int index, uint8_t *messag
         topic[topic_length] = '\0';
 
         point = point + 2 + topic_length;
-
-        printf("before....\n");
-
         delete_subscription(&broker->subs, topic, index, packet_identifier);
-
-        printf("after....\n");
     }
 
     send_unsuback(broker,index,packet_identifier);
@@ -373,7 +368,6 @@ void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t 
 
             /* If client is on the list receive subscribe */
             receive_subscribe(broker,index,&packet_identifier,message);
-
             print_subscriptions(broker->subs);
 
             /* Send subscribe acknowledgment SUBACK */
@@ -386,7 +380,9 @@ void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t 
 
         case PUBLISH_CONTROL_TYPE:
 
+            /* Find client */
             index = find_corresponding_mqtt_client(broker,client);
+            /* Receive publish message */
             receive_publish(broker,index,message);
 
         break;
@@ -401,7 +397,8 @@ void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t 
         break;
 
         case PINGEQ_CONTROL_TYPE:
-
+        
+            /* Receive pingrequest and send pingresponse */
             receive_pingrequest(broker,client,message);
 
         break;

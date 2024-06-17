@@ -1,6 +1,0 @@
-/home/tomasz/Documents/Studia/PTC/projekt/build/CMakeFiles/tcp_connection.dir
-/home/tomasz/Documents/Studia/PTC/projekt/build/CMakeFiles/mqttutils.dir
-/home/tomasz/Documents/Studia/PTC/projekt/build/CMakeFiles/mqtt_client.dir
-/home/tomasz/Documents/Studia/PTC/projekt/build/CMakeFiles/ptc.dir
-/home/tomasz/Documents/Studia/PTC/projekt/build/CMakeFiles/edit_cache.dir
-/home/tomasz/Documents/Studia/PTC/projekt/build/CMakeFiles/rebuild_cache.dir

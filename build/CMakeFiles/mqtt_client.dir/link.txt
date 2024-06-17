@@ -1,2 +1,0 @@
-/usr/bin/ar qc libmqtt_client.a CMakeFiles/mqtt_client.dir/src/mqtt_client.c.o
-/usr/bin/ranlib libmqtt_client.a

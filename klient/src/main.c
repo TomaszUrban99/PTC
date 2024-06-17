@@ -27,7 +27,7 @@ int main ( int argc, char **argv ){
 
     establish_tcp_connection(argv[1], argv[2], &client.tcp_socket);
 
-    client.connect_flags = 0x02;
+    client.connect_flags = 0x82;
     client.keep_alive_msb = 0x00;
     client.user_name = "tomek";
     client.password = "ddada";
