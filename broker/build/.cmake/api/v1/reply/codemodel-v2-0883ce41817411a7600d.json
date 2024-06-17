@@ -1,0 +1,96 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "ptc_mqtt",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "mqtt_broker::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-mqtt_broker-Debug-38aec935d8a543ee112e.json",
+					"name" : "mqtt_broker",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "mqtt_utils::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-mqtt_utils-Debug-34dd7d024c9851a66beb.json",
+					"name" : "mqtt_utils",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ptc_server::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ptc_server-Debug-3fe47a13e97d8593a4e1.json",
+					"name" : "ptc_server",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "subscription::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-subscription-Debug-c71a9999759448d1313f.json",
+					"name" : "subscription",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tcp_connection::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tcp_connection-Debug-ed972e087dd275076266.json",
+					"name" : "tcp_connection",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/tomasz/Documents/Studia/PTC/projekt/broker/build",
+		"source" : "/home/tomasz/Documents/Studia/PTC/projekt/broker"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}

@@ -57,51 +57,76 @@ void add_subscription ( struct subscription **sub, uint8_t *topic, int index, in
 
 }
 
-void delete_subscription ( struct subscription **sub, uint8_t *topic, int index, int packet_identifier ){
+void delete_subscriber ( struct subscription **sub, int index, int packet_identifier ){
 
-    struct subscription *sub_client = (*sub)->client;
+    struct subscriber *cli = (*sub)->client;
 
-    if ( strcmp(sub_client->topic, topic) == 0){
-        
-        struct subscriber *cl = sub_client->client;
+    if ( cli == NULL ){
+        return;
+    }
 
-        if ( cl->index == index && cl->packet_identifier == packet_identifier ){
-            sub_client->client = cl->next;
-            free(cl);
+    if ( cli->next == NULL ){
+
+        /* If subscriber found- delete */
+        if ( cli->index == index && cli->packet_identifier == packet_identifier ){
+            free(cli);
             return;
         }
 
-        while(cl->next != NULL){
-            
-            if ( cl->next->index == index && cl->next->packet_identifier == packet_identifier){
+    }
 
-                struct subscriber *dl = cl->next;
-                cl->next = cl->next->next;
-                free(dl);
-                return; 
-            }
+    while ( cli->next != NULL ){
 
-            cl = cl->next;
+        if ( cli->next->index == index && 
+            cli->next->packet_identifier == packet_identifier ){
+
+                struct subscriber *tmp = cli->next;
+                cli = cli->next->next;
+
+                free(tmp);
+                return;
         }
 
+        cli = cli->next;
+    }
 
+    return;
+}
+
+int delete_subscription ( struct subscription **sub, uint8_t *topic, int index, int packet_identifier ){
+
+    if ( *sub == NULL ){
+        return -1;
+    }
+
+    struct subscription *sub_client = (*sub);
+
+    if ( strcmp(sub_client->topic, topic) == 0){
+
+        *sub = sub_client->next;
+        delete_subscriber(&sub_client,index,packet_identifier);
+        free(sub_client);
+
+        return 0;
     }
 
     while (sub_client->next != NULL ){
 
         if ( strcmp(sub_client->next->topic, topic) == 0){
 
-            struct subscriber *cl = sub_client->next->client;
+            struct subscription *tmp = sub_client->next;
+            delete_subscriber(&sub_client->next,index,packet_identifier);
+            sub_client->next = sub_client->next->next;
 
-            while(cl){
+            free(tmp);
+            return 0;
 
-            }
         }
 
         sub_client = sub_client->next;
     }
-    
 
+    return -1;
 }
 
 void delete_subscribers ( struct subscription **subs ){

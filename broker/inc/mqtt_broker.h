@@ -142,13 +142,17 @@ int receive_publish ( struct mqtt_broker *broker, int index, uint8_t *message );
 /*!
     \brief Send pingresponse
 */
-int send_pingresponse ( struct mqtt_broker *broker, struct tcp_client *client );
+int send_pingresponse ( struct mqtt_broker *broker, struct tcp_client_info *client );
 
 /*!
     \brief Receive ping request
 */
-int receive_pingrequest ( struct mqtt_broker *broker, struct tcp_client *client, uint8_t *message );
+int receive_pingrequest ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t *message );
 
+/*!
+    \brief Send unsuback
+*/
+int send_unsuback ( struct mqtt_broker *broker, int index, int packet_identifier );
 
 int receive_unsubscribe ( struct mqtt_broker *broker, int index, uint8_t *message );
 

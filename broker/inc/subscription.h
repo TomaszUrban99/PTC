@@ -28,7 +28,12 @@ void add_subscriber ( struct subscriber **subs, int index, int qos, int packet_i
 */
 void add_subscription ( struct subscription **sub, uint8_t *topic, int index, int qos, int packet_identifier );
 
-void delete_subscription ( struct subscription **sub, uint8_t *topic, int index, int packet_identifier );
+int delete_subscription ( struct subscription **sub, uint8_t *topic, int index, int packet_identifier );
+
+/*!
+    \brief Delete subscriber with index and packet_identifier from subscription
+*/
+void delete_subscriber ( struct subscription **sub, int index, int packet_identifier );
 
 void delete_subscribers ( struct subscription **subs );
 

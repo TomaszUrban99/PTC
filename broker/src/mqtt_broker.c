@@ -277,7 +277,7 @@ int receive_publish ( struct mqtt_broker *broker, int index, uint8_t *message ){
 
 }
 
-int send_pingresponse ( struct mqtt_broker *broker, struct tcp_client *client ){
+int send_pingresponse ( struct mqtt_broker *broker, struct tcp_client_info *client ){
 
     uint8_t pingresponse[PINGRESP_MESSAGE_LENGTH];
 
@@ -287,14 +287,14 @@ int send_pingresponse ( struct mqtt_broker *broker, struct tcp_client *client ){
     int total_bytes = send(client->socket,pingresponse,PINGRESP_MESSAGE_LENGTH,0);
 
     if ( total_bytes < PINGRESP_MESSAGE_LENGTH ){
-        fprintf("send_pingresp(): failed to send");
+        fprintf(stderr, "send_pingresp(): failed to send");
         return -1;
     }
 
     return total_bytes;
 }
 
-int receive_pingrequest ( struct mqtt_broker *broker,  struct tcp_client *client, uint8_t *message ){
+int receive_pingrequest ( struct mqtt_broker *broker,  struct tcp_client_info *client, uint8_t *message ){
 
     if ( send_pingresponse ( broker, client ) < 0){
         return -1;
@@ -304,13 +304,51 @@ int receive_pingrequest ( struct mqtt_broker *broker,  struct tcp_client *client
 
 }
 
+int send_unsuback ( struct mqtt_broker *broker, int index, int packet_identifier ){
+
+    uint8_t unsuback_message[UNSUBACK_MESSAGE_LENGTH];
+
+    unsuback_message[0] = UNSUBACK_CONTROL_TYPE;
+    unsuback_message[1] = UNSUBACK_MESSAGE_LENGTH - 2;
+    unsuback_message[2] = (packet_identifier >> 8);
+    unsuback_message[3] = packet_identifier;
+
+    int bytes_send = send(broker->clients[index].socket, unsuback_message, UNSUBACK_MESSAGE_LENGTH, 0);
+
+    return bytes_send;
+}
+
 int receive_unsubscribe ( struct mqtt_broker *broker, int index, uint8_t *message ){
 
     int remaining_length = message[1];
-
     int packet_identifier = ( message[2] << 8 | message[3]);
+    int point = 2;
 
 
+    while ( point < remaining_length ){
+
+        uint8_t topic[128];
+        /* Topic length */
+        int topic_length = ( message[point+2] << 8 | message[point+3] );
+
+        for ( int i = 0; i < topic_length; ++i ){
+            topic[i] = message[i + point + 4];
+        }
+
+        topic[topic_length] = '\0';
+
+        point = point + 2 + topic_length;
+
+        printf("before....\n");
+
+        delete_subscription(&broker->subs, topic, index, packet_identifier);
+
+        printf("after....\n");
+    }
+
+    send_unsuback(broker,index,packet_identifier);
+
+    return 0;
 }
 
 void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t *message ){
@@ -348,14 +386,17 @@ void mqtt ( struct mqtt_broker *broker, struct tcp_client_info *client, uint8_t 
 
         case PUBLISH_CONTROL_TYPE:
 
+            index = find_corresponding_mqtt_client(broker,client);
             receive_publish(broker,index,message);
 
         break;
 
         case UNSUBSCRIBE_CONTROL_TYPE:
 
+            index = find_corresponding_mqtt_client(broker,client);
+            print_subscriptions(broker->subs);
 
-
+            receive_unsubscribe(broker,index,message);
         
         break;
 
